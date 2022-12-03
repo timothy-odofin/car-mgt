@@ -36,10 +36,9 @@ jobs:
         USERNAME: ${{secrets.CAR_USERNAME}}
         PORT: ${{secrets.CAR_PORT}}
         script: |
-          pm2 stop --name=Nodeapp app.js
           rm -rf /home/dep_user/car-mgt
           cd /home/dep_user
-          git clone https://github.com/timothy-odofin/car-mgt.git
+          git clone git@github.com:timothy-odofin/car-mgt.git
           cd /home/dep_user/car-mgt
           npm install
           pm2 start app.js
