@@ -37,6 +37,7 @@ jobs:
         PORT: ${{secrets.CAR_PORT}}
         script: |
           pm2 delete all
+          rm -r /opt/car-mgt/*
           cd /opt/car-mgt
           git pull --force
           npm install
