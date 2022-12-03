@@ -37,7 +37,7 @@ jobs:
         PORT: ${{secrets.CAR_PORT}}
         script: |
           pm2 delete all
-          cd /opt/garage_api
+          cd /opt/car-mgt
           git pull
           npm install
           pm2 start npm -- start
