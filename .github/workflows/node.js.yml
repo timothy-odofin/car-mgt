@@ -36,7 +36,6 @@ jobs:
         USERNAME: ${{secrets.CAR_USERNAME}}
         PORT: ${{secrets.CAR_PORT}}
         PASSPHRASE: ${{secrets.CAR_PHRASE}}
-        PASSWORD: ${{secrets.CAR_PASSWORD}}
         script: |
           pm2 delete all
           cd /opt/garage_api
