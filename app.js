@@ -31,7 +31,7 @@ app.use(cors());
 app.use(notFound);
 
 // app.use(errorHandlerMiddrware);
-const PORT = process.env.PORT || 80;
+const PORT = process.env.PORT || 4021;
 sequelize
   .authenticate()
   .then(() => {
