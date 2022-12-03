@@ -31,11 +31,12 @@ jobs:
     - name: SSH Remote Commands
       uses: appleboy/ssh-action@v0.1.2
       with:
-        key: ${{secrets.CAR_SSH_KEY}}
-        host: ${{secrets.CAR_HOST}}
-        username: ${{secrets.CAR_USERNAME}}
-        port: ${{secrets.CAR_PORT}}
-        passphrase: ${{secrets.CAR_PHRASE}}
+        KEY: ${{secrets.CAR_SSH_KEY}}
+        HOST: ${{secrets.CAR_HOST}}
+        USERNAME: ${{secrets.CAR_USERNAME}}
+        PORT: ${{secrets.CAR_PORT}}
+        PASSPHRASE: ${{secrets.CAR_PHRASE}}
+        PASSWORD: ${{secrets.CAR_PASSWORD}}
         script: |
           pm2 delete all
           cd /opt/garage_api
