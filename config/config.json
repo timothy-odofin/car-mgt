@@ -1,23 +1,23 @@
 {
   "development": {
-    "username": "remote",
+    "username": "dev_user",
     "password": "WT1XWgI9HsJnd5lZ",
     "database": "gara_store",
-    "host": "208.87.133.54",
+    "host": "localhost",
     "dialect": "mysql"
   },
   "test": {
-    "username": "remote",
+    "username": "dev_user",
     "password": "WT1XWgI9HsJnd5lZ",
     "database": "gara_store",
-    "host": "208.87.133.54",
+    "host": "localhost",
     "dialect": "mysql"
   },
   "production": {
-    "username": "remote",
+    "username": "dev_user",
     "password": "WT1XWgI9HsJnd5lZ",
     "database": "gara_store",
-    "host": "208.87.133.54",
+    "host": "localhost",
     "dialect": "mysql"
   }
 }
