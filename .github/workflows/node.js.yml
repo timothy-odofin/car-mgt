@@ -38,6 +38,6 @@ jobs:
         script: |
           pm2 delete all
           cd /opt/car-mgt
-          git pull
+          git pull --force
           npm install
           pm2 start npm -- start
