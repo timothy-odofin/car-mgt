@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const vehicleController = require("../controllers/vehicle_controller");
 
+router.post("/verify/:vin", vehicleController.verifyVehicle);
 router.post("/add", vehicleController.addVehicle);
 router.get("/list", vehicleController.getAllVehicle);
 router.put("/update/:uuid", vehicleController.vehicleUpdate);

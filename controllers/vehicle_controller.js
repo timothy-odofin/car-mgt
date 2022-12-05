@@ -1,7 +1,22 @@
 const { Vehicle } = require("../models/index");
 const message = require("../config/constant");
-
+const axios = require("axios");
+const vehicleURL = "https://swipe.fund:7575/paga/verification/vin?vin=";
 module.exports = {
+  verifyVehicle: async (req, res) => {
+    try {
+      // const body = req.body;
+      const { vin } = req.params;
+      const response = await axios.post(vehicleURL + vin, {});
+      res.send(response.data);
+    } catch (error) {
+      if (error.response) {
+        let { status, statusText } = error.response;
+        res.status(status).send(statusText);
+      } else res.status(404).send(error);
+    }
+  },
+
   addVehicle: async (req, res) => {
     const {
       vehicleNumber,
