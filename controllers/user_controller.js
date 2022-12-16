@@ -17,7 +17,10 @@ module.exports = {
   getUser: async (req, res, next) => {
     const uuid = req.params.uuid;
     try {
-      const user = await User.findOne({ where: { uuid } });
+      const user = await User.findOne({
+        where: { uuid },
+        include: ["products", "vehicles", "servicelogs", "services"],
+      });
       if (!user) {
         return res
           .status(404)

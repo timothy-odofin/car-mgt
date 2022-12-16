@@ -77,16 +77,17 @@ module.exports = {
     });
     try {
       const savedUser = await user.save();
-      await sendOTPToEmail(savedUser.activationOtp, savedUser.email);
+      //await sendOTPToEmail(savedUser.activationOtp, savedUser.email);
       return res.send({
         status: message.SUCCESS,
         data: {
           message: message.DATA_SIGNUP,
-          name: user.name,
-          email: user.email,
+          name: savedUser.name,
+          email: savedUser.email,
         },
       });
     } catch (error) {
+      console.log(error);
       return res
         .status(400)
         .send({ status: message.FAIL, data: message.DATA_WRONG });
@@ -122,7 +123,7 @@ module.exports = {
 
     //create and assign a token
     const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "1d",
     });
     res.header("auth_token", token).send({
       status: "success",

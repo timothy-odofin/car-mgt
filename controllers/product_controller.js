@@ -1,30 +1,36 @@
-const { Product } = require("../models/index");
+const { Product, User } = require("../models/index");
 const message = require("../config/constant");
 
 module.exports = {
   addProduct: async (req, res) => {
-    const { name, description, avaliable_quatity, unit_price, postedBy } =
+    console.log(req.body);
+    const { name, description, avaliable_quatity, unit_price, userUuid } =
       req.body;
+
     try {
+      const user = await User.findOne({ where: { uuid: userUuid } });
       const product = await Product.create({
         name,
         description,
         avaliable_quatity,
         unit_price,
-        postedBy,
+        postedById: user.id,
       });
-      return res.json({ status: message.SUCCESS, data: product });
+      return res.json({
+        status: message.SUCCESS,
+        data: product,
+      });
     } catch (error) {
       console.log(error);
       return res
-        .status(500)
+        .status(404)
         .json({ status: message.FAIL, data: message.DATA_WRONG });
     }
   },
 
-  editAllProduct: async (req, res) => {
+  fetchProduct: async (req, res) => {
     try {
-      const product = await Product.findAll({});
+      const product = await Product.findAll({ include: "user" });
       res.status(201).json({ status: message.SUCCESS, data: product });
     } catch (error) {
       console.log(error);
@@ -35,10 +41,11 @@ module.exports = {
   },
 
   fetchProductPagination: async (req, res) => {
+    const { page, size } = req.params;
     try {
       const product = await Product.findAll({
-        limit: 2,
-        offset: 2,
+        limit: size,
+        offset: page,
       });
       return res.status(201).json({ status: message.SUCCESS, data: product });
     } catch (error) {
@@ -54,9 +61,7 @@ module.exports = {
     try {
       const product = await Product.findOne({ where: { uuid } });
       if (!product) {
-        return res
-          .status(404)
-          .json({ status: message.FAIL, data: message.DATA_INVALID_NO });
+        return res.status(404).json({ status: process.env.ERROR });
       }
       res.status(200).json({ status: message.SUCCESS, data: product });
     } catch (error) {
@@ -70,11 +75,12 @@ module.exports = {
       const product = await Product.findOne({ where: { uuid } });
       await product.destroy();
       if (!product) {
-        return res
-          .status(404)
-          .json({ status: message.FAIL, data: message.DATA_INVALID_NO });
+        return res.status(404).json({ status: process.env.ERROR });
       }
-      return res.json({ status: message.SUCCESS, data: DELETED });
+      return res.json({
+        Status: process.env.SUCCESS,
+        data: message.DATA_DELETED,
+      });
     } catch (error) {
       return res
         .status(400)

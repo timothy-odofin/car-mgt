@@ -5,8 +5,8 @@ const settingRoute = require("./routes/setting_route");
 const userRoute = require("./routes/users_route");
 const productRoute = require("./routes/product_route");
 const vehicleRoute = require("./routes/vehicle_route");
-const transactionRoute = require("./routes/transaction_route");
 const insuranceRoute = require("./routes/insurance_route");
+const serviceRoute = require("./routes/service_route");
 const verified = require("./verifyToken");
 const { sequelize } = require("./models/index");
 const notFound = require("./middleware/not-found");
@@ -22,9 +22,8 @@ app.use("/entrance", entranceRoute);
 app.use("/user", verified, userRoute);
 app.use("/product", verified, productRoute);
 app.use("/vehicle", verified, vehicleRoute);
-app.use("/transaction", verified, transactionRoute);
 app.use("/insurance", verified, insuranceRoute);
-
+app.use("/service", verified, serviceRoute);
 // CORS POLICY
 app.use(cors());
 

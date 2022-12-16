@@ -26,4 +26,11 @@ module.exports = {
   DATA_INVALID: "Invalid Token",
   DATA_NO_TOKEN: "Unauthorized User, Provide Your Token",
   DATA_ALL: "All field are Required",
+  USER_NOT_FOUND: "User with specified credentials not found",
+  PRODUCT_NOT_FOUND: "Product with specified credentials not found",
+  VEHICLE_NOT_FOUND: "Vehicle with specified credentials not found",
+  PRODUCT_ADDED: "Product added successfully",
+  VEHICLE_ADDED: "Vehicle added successfully",
+  SERVICE_ADDED: "Service added successfully",
+  SERVICELOG_ADDED: "ServiceLog added successfully",
 };

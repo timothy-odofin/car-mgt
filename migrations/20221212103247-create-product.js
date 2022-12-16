@@ -1,54 +1,53 @@
-'use strict';
+"use strict";
 
-const { UUIDV4 } = require('sequelize')
+const { UUIDV4 } = require("sequelize");
 
 module.exports = {
   async up(queryInterface, DataTypes) {
-    await queryInterface.createTable('products', {
+    await queryInterface.createTable("products", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       uuid: {
         type: DataTypes.UUID,
-        defaultValue: UUIDV4
+        defaultValue: UUIDV4,
       },
       name: {
         type: DataTypes.STRING,
         allowNull: false,
-        require: [true, 'Name of the product must be  provided']
+        require: [true, "Name of the product must be  provided"],
       },
       description: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       avaliable_quatity: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       unit_price: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        require: [true, 'Name of the product must be  provided']
-
+        require: [true, "Name of the product must be  provided"],
       },
-      postedBy: {
-        type: DataTypes.STRING,
-        allowNull: false
+      postedById: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: DataTypes.DATE
-      }
+        type: DataTypes.DATE,
+      },
     });
   },
   async down(queryInterface, DataTypes) {
-    await queryInterface.dropTable('products');
-  }
+    await queryInterface.dropTable("products");
+  },
 };

@@ -1,23 +1,23 @@
 {
   "development": {
-    "username": "dev_user",
-    "password": "WT1XWgI9HsJnd5lZ",
-    "database": "gara_store",
-    "host": "localhost",
+    "username": "root",
+    "password": "johnson",
+    "database": "garage_app",
+    "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "test": {
-    "username": "dev_user",
-    "password": "WT1XWgI9HsJnd5lZ",
-    "database": "gara_store",
-    "host": "localhost",
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "production": {
-    "username": "dev_user",
-    "password": "WT1XWgI9HsJnd5lZ",
-    "database": "gara_store",
-    "host": "localhost",
+    "username": "root",
+    "password": null,
+    "database": "database_production",
+    "host": "127.0.0.1",
     "dialect": "mysql"
   }
 }
