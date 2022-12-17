@@ -33,4 +33,6 @@ module.exports = {
   VEHICLE_ADDED: "Vehicle added successfully",
   SERVICE_ADDED: "Service added successfully",
   SERVICELOG_ADDED: "ServiceLog added successfully",
+  SERVICE_REQUEST:
+    "ServiceProviderId,  ServiceOwnerId and VehicleId are Require",
 };
