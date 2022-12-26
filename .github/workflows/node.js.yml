@@ -36,6 +36,8 @@ jobs:
         USERNAME: ${{secrets.CAR_USERNAME}}
         PORT: ${{secrets.CAR_PORT}}
         script: |
+          cd /home/dep_user/car-mgt
+          pm2 stop app.js
           rm -rf /home/dep_user/car-mgt
           cd /home/dep_user
           git clone https://github.com/timothy-odofin/car-mgt.git
