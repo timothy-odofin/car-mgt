@@ -1,22 +1,43 @@
-const { Service, ServiceLog, User } = require("../models/index");
+const { Service, ServiceLog, User, Vehicle } = require("../models/index");
 const message = require("../config/constant");
 
 module.exports = {
   serviceRequest: async (req, res) => {
     const {
-      userUuid,
+      serviceproviderUuid,
+      serviceOwnerUuid,
+      vehicleUuid,
       service_type,
       owner_complain,
       service_status,
       trans_date,
     } = req.body;
     try {
-      const user = await User.fineOne({ where: { uuid: userUuid } });
+      const serviceProvider = await User.fineOne({
+        where: {
+          uuid: serviceproviderUuid,
+        },
+      });
+      const serviceOnwer = await User.fineOne({
+        where: {
+          uuid: serviceOwnerUuid,
+        },
+      });
+      const vehicle = await Vehicle.fineOne({
+        where: {
+          uuid: vehicleUuid,
+        },
+      });
+      if (!serviceProvider || !serviceOnwer || !vehicle) {
+        return res
+          .status(404)
+          .json({ status: message.FAIL, data: message.SERVICE_REQUEST });
+      }
       await Service.create({
-        service_provideId: user.id,
-        service_ownerId: user.id,
+        service_provideId: serviceProvider.id,
+        service_ownerId: serviceOnwer.id,
         service_type: service_type,
-        vehicleId: user.id,
+        vehicleId: vehicle.id,
         owner_complain: owner_complain,
         service_status: service_status,
         trans_date: trans_date,
@@ -34,7 +55,7 @@ module.exports = {
     const { cost, description } = req.body;
     try {
       const service = await Service.create({ cost, description });
-      if (!cost && !description) {
+      if (!cost || !description) {
         return res.status(400).json({ success: false, data: message.DATA_ALL });
       }
       return res.json({ status: message.SUCCESS, data: service });
@@ -48,7 +69,15 @@ module.exports = {
 
   fetchAllService: async (req, res) => {
     try {
-      const service = await Service.findAll({ include: "users" });
+      const service = await Service.findAll({
+        include: [
+          { model: User, as: "serviceOwner" },
+          { model: User, as: "serviceProvider" },
+          { model: Vehicle, as: "vehicle" },
+        ],
+      });
+      console.log("################ Service Result############");
+      console.log(service);
       return res.status(201).json({ status: message.SUCCESS, data: service });
     } catch (error) {
       console.log(error);

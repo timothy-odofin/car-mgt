@@ -10,18 +10,26 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate({ Vehicle, User, ServiceLog }) {
       // define association here
-      this.belongsTo(User, { foreignKey: "service_ownerId", as: "user" });
-      this.belongsTo(User, { foreignKey: "service_provideId", as: "user" });
-      this.belongsTo(Vehicle, { foreignKey: "vehicleId", as: "vehicle" });
+      this.belongsTo(User, {
+        foreignKey: {
+          name: "playerOneId",
+        },
+        as: "serviceOwner",
+      });
+      this.belongsTo(User, {
+        foreignKey: { name: "service_provideId" },
+        as: "serviceProvider",
+      });
+      this.belongsTo(Vehicle, {
+        foreignKey: { name: "vehicleId" },
+        as: "vehicle",
+      });
       // this.hasMany(ServiceLog, { foreignKey: "serviceId", as: "servicelog" });
     }
     toJSON() {
       return {
         ...this.get(),
         id: undefined,
-        service_ownerId: undefined,
-        service_provideId: undefined,
-        vehicleId: undefined,
       };
     }
   }

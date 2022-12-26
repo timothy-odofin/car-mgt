@@ -13,12 +13,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate({ Product, Vehicle, Service, ServiceLog }) {
       // define association here
       this.hasMany(Product, { foreignKey: "postedById", as: "products" });
-      this.hasMany(Service, {
-        foreignKey: "service_provideId",
-        as: "services",
-      });
-      this.hasMany(Service, { foreignKey: "service_ownerId", as: "services" });
       this.hasMany(Vehicle, { foreignKey: "ownerId", as: "vehicles" });
+
       // this.hasMany(ServiceLog, { foreignKey: "postedById", as: "servicelogs" });
     }
     toJSON() {
