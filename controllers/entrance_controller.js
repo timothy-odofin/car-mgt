@@ -12,7 +12,7 @@ const {
 const otpGenerator = require("otp-generator");
 const nodemailer = require("nodemailer");
 const message = require("../config/constant");
-
+//This is greally good.
 function generateOtp() {
   return otpGenerator.generate(6, {
     upperCaseAlphabets: false,
