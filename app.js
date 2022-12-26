@@ -19,7 +19,8 @@ app.use(express.json());
 //Routes Documentation
 app.use("/setting", settingRoute);
 app.use("/entrance", entranceRoute);
-app.use("/user", verified, userRoute);
+app.use("/user", userRoute);
+// app.use("/user", verified, userRoute);
 app.use("/product", verified, productRoute);
 app.use("/vehicle", verified, vehicleRoute);
 app.use("/insurance", verified, insuranceRoute);

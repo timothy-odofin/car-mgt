@@ -72,6 +72,8 @@ module.exports = {
       email: req.body.email,
       phone: req.body.phone,
       accountStatus: false,
+      category: req.body.category,
+      account_type: req.body.serviceList,
       activationOtp: otp,
       password: await encriptPassword(req.body.password),
     });
@@ -123,7 +125,7 @@ module.exports = {
 
     //create and assign a token
     const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, {
-      expiresIn: "1d",
+      expiresIn: "60d",
     });
     res.header("auth_token", token).send({
       status: "success",

@@ -1,11 +1,14 @@
 const { User } = require("../models/index");
 const message = require("../config/constant");
+const Sequelize = require('sequelize');
+const {UserConverter} = require("../utils/app_util");
+const Op = Sequelize.Op;
 
 module.exports = {
   getAllUsers: async (req, res) => {
     try {
       const user = await User.findAll({});
-      return res.status(201).json({ status: message.SUCCESS, data: user });
+      return res.status(201).json({ status: message.SUCCESS, data:  UserConverter.list(user) });
     } catch (error) {
       console.log(error);
       return res
@@ -14,19 +17,31 @@ module.exports = {
     }
   },
 
+  listUserByService: async (req, res) => {
+    try {
+      const serviceType = req.params.serviceType;
+      const user = await User.findAll({where:{account_type: {
+            [Op.like]: `%${serviceType}%`
+          }}});
+      return res.status(201).json({ status: message.SUCCESS, data:  UserConverter.list(user) });
+    } catch (error) {
+      console.log(error);
+      return res
+          .status(500)
+          .json({ status: message.FAIL, data: message.DATA_WRONG });
+    }
+  },
+
   getUser: async (req, res, next) => {
     const uuid = req.params.uuid;
     try {
-      const user = await User.findOne({
-        where: { uuid },
-        include: ["products", "vehicles", "servicelogs", "services"],
-      });
+      const user = UserConverter.find(uuid)
       if (!user) {
         return res
           .status(404)
           .json({ status: message.FAIL, data: message.DATA_INVALID_NO });
       }
-      res.status(200).json({ status: message.SUCCESS, data: user });
+      res.status(200).json({ status: message.SUCCESS, data: UserConverter.getSingleUser(user) });
     } catch (error) {
       return res
         .status(500)
@@ -35,13 +50,15 @@ module.exports = {
   },
 
   fetchByPagination: async (req, res) => {
-    const { size, page } = req.params;
+    const { size, page } = req.query;
     try {
       const user = await User.findAll({
         limit: size,
         offset: page,
+        where: {},
       });
-      return res.status(201).json({ status: message.SUCCESS, data: user });
+
+      return res.status(201).json({ status: message.SUCCESS, data:  UserConverter.list(user) });
     } catch (error) {
       console.log(error);
       return res
@@ -77,7 +94,6 @@ module.exports = {
         (user.contact = contact),
         (user.address = address),
         (user.password = password),
-        (user.photograph = photograph),
         (user.account_type = account_type),
         (user.account_disable = account_disable),
         (user.category = category);
