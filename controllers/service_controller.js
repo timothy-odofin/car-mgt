@@ -71,12 +71,11 @@ module.exports = {
     try {
       const service = await Service.findAll({
         include: [
-          { model: User, as: "serviceOwner" },
-          { model: User, as: "serviceProvider" },
-          { model: Vehicle, as: "vehicle" },
+          { model: User, as: "users" },
+          { model: User, as: "users" },
+          { model: Vehicle, as: "vehicles" },
         ],
       });
-      console.log("################ Service Result############");
       console.log(service);
       return res.status(201).json({ status: message.SUCCESS, data: service });
     } catch (error) {
