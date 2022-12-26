@@ -3,16 +3,17 @@ const router = express.Router();
 const serviceController = require("../controllers/service_controller");
 
 // Service  API
-router.post("/request_service", serviceController.serviceRequest);
-router.post("/add_service_cost", serviceController.addServiceCost);
-router.get("/fetch_all_service", serviceController.fetchAllService);
-router.patch("/edit_service_cost/:uuid", serviceController.editServiceCost);
+router.post("/new", serviceController.serviceRequest);
+router.post("/update", serviceController.serviceRequest);
+router.post("/cost/add/:uuid", serviceController.addServiceCost);
+router.get("/fetch", serviceController.fetchAllService);
+router.patch("/cost/edit/:uuid", serviceController.editServiceCost);
 router.get(
-  "/fetch_service_by_provider/:uuid",
+  "/fetch/provider/:uuid",
   serviceController.fetchByServiceProvider
 );
 router.get(
-  "/fetch_service_by_owner/:ownerid",
+  "/fetch/owner/:ownerid",
   serviceController.fetchByOwnerId
 );
 router.get("/fetch_all_pagination", serviceController.fetchByPagination);

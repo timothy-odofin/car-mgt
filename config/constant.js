@@ -5,6 +5,7 @@ module.exports = {
   RESET_PASSWORD_KEY: "11333COMEHOMEBACK",
   FAIL: "failed",
   SUCCESS: "success",
+  DEFAULT_SERVICE_STATUS: "Pending",
   DATA_SIGNUP: "succesful, kindly activate your account",
   DATA_SIGNUP_EXIST: "Email already exists.",
   USER_NOT_FOUND: "Either username/password is incorrect",
@@ -33,6 +34,7 @@ module.exports = {
   VEHICLE_ADDED: "Vehicle added successfully",
   SERVICE_ADDED: "Service added successfully",
   SERVICELOG_ADDED: "ServiceLog added successfully",
+  SERVICE_NOT_FOUND: "Service not available, kindly provide a valid record",
   SERVICE_REQUEST:
     "ServiceProviderId,  ServiceOwnerId and VehicleId are Require",
 };

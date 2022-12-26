@@ -1,5 +1,7 @@
 const { Service, ServiceLog, User, Vehicle } = require("../models/index");
+const{findUserByUUID,findUserById,findBySingleUser,findVehicleSingle,findSingleServiceByUuid} = require('../controllers/search')
 const message = require("../config/constant");
+const {Mapper} = require("../utils/app_util");
 
 module.exports = {
   serviceRequest: async (req, res) => {
@@ -9,25 +11,12 @@ module.exports = {
       vehicleUuid,
       service_type,
       owner_complain,
-      service_status,
       trans_date,
     } = req.body;
     try {
-      const serviceProvider = await User.fineOne({
-        where: {
-          uuid: serviceproviderUuid,
-        },
-      });
-      const serviceOnwer = await User.fineOne({
-        where: {
-          uuid: serviceOwnerUuid,
-        },
-      });
-      const vehicle = await Vehicle.fineOne({
-        where: {
-          uuid: vehicleUuid,
-        },
-      });
+      const serviceProvider = await findBySingleUser(serviceproviderUuid);
+      const serviceOnwer =await findBySingleUser(serviceOwnerUuid);
+      const vehicle = await findVehicleSingle(vehicleUuid);
       if (!serviceProvider || !serviceOnwer || !vehicle) {
         return res
           .status(404)
@@ -39,7 +28,7 @@ module.exports = {
         service_type: service_type,
         vehicleId: vehicle.id,
         owner_complain: owner_complain,
-        service_status: service_status,
+        service_status: message.DEFAULT_SERVICE_STATUS,
         trans_date: trans_date,
       });
       return res.json({ status: message.SUCCESS, data: message.SERVICE_ADDED });
@@ -52,9 +41,15 @@ module.exports = {
   },
 
   addServiceCost: async (req, res) => {
+    const{uuid} = req.params;
+    const service =await findSingleServiceByUuid(uuid);
+    if(!service)
+      return res
+          .status(404)
+          .json({ status: message.FAIL, data: message.SERVICE_NOT_FOUND });
     const { cost, description } = req.body;
     try {
-      const service = await Service.create({ cost, description });
+      const service = await Service.update({ cost, description,id:service.id });
       if (!cost || !description) {
         return res.status(400).json({ success: false, data: message.DATA_ALL });
       }
@@ -69,16 +64,8 @@ module.exports = {
 
   fetchAllService: async (req, res) => {
     try {
-      const service = await Service.findAll({
-        include: [
-          { model: User, as: "serviceOwner" },
-          { model: User, as: "serviceProvider" },
-          { model: Vehicle, as: "vehicle" },
-        ],
-      });
-      console.log("################ Service Result############");
-      console.log(service);
-      return res.status(201).json({ status: message.SUCCESS, data: service });
+      const service = await Service.findAll({raw:true});
+      return res.status(201).json({ status: message.SUCCESS, data: Mapper.listService(service) });
     } catch (error) {
       console.log(error);
       return res
