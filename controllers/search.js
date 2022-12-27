@@ -1,15 +1,28 @@
-const { Product, User, Vehicle } = require("../models/index");
+const {
+  Product,
+  User,
+  Vehicle,
+  Service,
+  ServiceLog,
+} = require("../models/index");
 const message = require("../config/constant");
 
 module.exports.findUserByUUID = async (userUuid, response) => {
   const user = await User.findOne({ where: { uuid: userUuid }, raw: true });
-  if (!user)
-    response
+  if (user) return user;
+  else
+    return response
       .status(201)
       .json({ status: message.FAIL, data: message.USER_NOT_FOUND });
-  return user;
 };
 
+module.exports.findBySingleUser = (userUuid) => {
+  return User.findOne({ where: { uuid: userUuid }, raw: true });
+};
+
+module.exports.findUserById = async (id) => {
+  return await User.findOne({ where: { id: id }, raw: true });
+};
 module.exports.findProductByUUID = async (userUuid, response) => {
   const product = await Product.findOne({
     where: { uuid: userUuid },
@@ -44,4 +57,34 @@ module.exports.findInsuranceByUUID = async (userUuid, response) => {
       .status(201)
       .json({ status: message.FAIL, data: message.VEHICLE_NOT_FOUND });
   return vechicle;
+};
+
+module.exports.findVehicleById = async (id) => {
+  return await Vehicle.findOne({ where: { id: id }, raw: true });
+};
+
+module.exports.findVehicleSingle = (userUuid) => {
+  return Vehicle.findOne({
+    where: { uuid: userUuid },
+    raw: true,
+  });
+};
+
+module.exports.findSingleServiceByUuid = (userUuid) => {
+  return Service.findOne({ where: { uuid: userUuid }, raw: true });
+};
+
+module.exports.findSingleServiceLogByUuid = (userUuid) => {
+  return Vehicle.findOne({
+    where: { uuid: userUuid },
+    raw: true,
+  });
+};
+
+module.exports.findSingleServiceByUuid = (userUuid) => {
+  return ServiceLog.findOne({ where: { uuid: userUuid }, raw: true });
+};
+
+module.exports.findByServiceOwned = (userUuid) => {
+  return ServiceLog.findOne({ where: { uuid: userUuid }, raw: true });
 };

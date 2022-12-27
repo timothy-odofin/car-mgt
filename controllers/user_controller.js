@@ -1,14 +1,15 @@
 const { User } = require("../models/index");
 const message = require("../config/constant");
 const Sequelize = require('sequelize');
-const {UserConverter} = require("../utils/app_util");
+const {Mapper} = require("../utils/app_util");
+const {findUserByUUID} = require("../controllers/search")
 const Op = Sequelize.Op;
 
 module.exports = {
   getAllUsers: async (req, res) => {
     try {
       const user = await User.findAll({});
-      return res.status(201).json({ status: message.SUCCESS, data:  UserConverter.list(user) });
+      return res.status(201).json({ status: message.SUCCESS, data:  Mapper.listUser(user) });
     } catch (error) {
       console.log(error);
       return res
@@ -23,7 +24,7 @@ module.exports = {
       const user = await User.findAll({where:{account_type: {
             [Op.like]: `%${serviceType}%`
           }}});
-      return res.status(201).json({ status: message.SUCCESS, data:  UserConverter.list(user) });
+      return res.status(201).json({ status: message.SUCCESS, data:  Mapper.listUser(user) });
     } catch (error) {
       console.log(error);
       return res
@@ -35,13 +36,8 @@ module.exports = {
   getUser: async (req, res, next) => {
     const uuid = req.params.uuid;
     try {
-      const user = UserConverter.find(uuid)
-      if (!user) {
-        return res
-          .status(404)
-          .json({ status: message.FAIL, data: message.DATA_INVALID_NO });
-      }
-      res.status(200).json({ status: message.SUCCESS, data: UserConverter.getSingleUser(user) });
+      const user =  await findUserByUUID(uuid,res)
+      res.status(200).json({ status: message.SUCCESS, data: Mapper.getSingleUser(user) });
     } catch (error) {
       return res
         .status(500)
@@ -58,7 +54,7 @@ module.exports = {
         where: {},
       });
 
-      return res.status(201).json({ status: message.SUCCESS, data:  UserConverter.list(user) });
+      return res.status(201).json({ status: message.SUCCESS, data:  Mapper.listUser(user) });
     } catch (error) {
       console.log(error);
       return res

@@ -24,7 +24,7 @@ app.use("/user", userRoute);
 app.use("/product", verified, productRoute);
 app.use("/vehicle", verified, vehicleRoute);
 app.use("/insurance", verified, insuranceRoute);
-app.use("/service", verified, serviceRoute);
+app.use("/service", serviceRoute);
 // CORS POLICY
 app.use(cors());
 
