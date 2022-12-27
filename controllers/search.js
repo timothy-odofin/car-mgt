@@ -1,4 +1,4 @@
-const { Product, User, Vehicle,Service } = require("../models/index");
+const { Product, User, Vehicle,Service,ServiceLog } = require("../models/index");
 const message = require("../config/constant");
 
 module.exports.findUserByUUID = async (userUuid, response) => {
@@ -15,8 +15,8 @@ module.exports.findBySingleUser =  (userUuid) => {
   return   User.findOne({ where: { uuid: userUuid }, raw: true });
 };
 
-module.exports.findUserById = async (id) => {
- return await User.findOne({ where: { id: id }, raw: true });
+module.exports.findUserById =  (id) => {
+ return  User.findOne({ where: { id: id }, raw: true });
 
 };
 module.exports.findProductByUUID = async (userUuid, response) => {
@@ -71,4 +71,35 @@ module.exports.findVehicleSingle =  (userUuid) => {
 
 module.exports.findSingleServiceByUuid =  (userUuid) => {
   return   Service.findOne({ where: { uuid: userUuid }, raw: true });
+};
+
+module.exports.findSingleServiceByUuidV2 = async (userUuid, response) => {
+ return await Service.findOne({ where: { uuid: userUuid }, raw: true });
+
+};
+
+module.exports.findServiceConversationByUUID = async (uuid) => {
+  return await ServiceLog.findOne({ where: { uuid: uuid }, raw: true });
+
+};
+
+module.exports.deleteServiceConversationByUUID = async ({id}) => {
+  await ServiceLog.destroy({ where: { id: id } });
+};
+
+module.exports.updateService = async ({serviceId,postedById,comment, category,  cost}) => {
+    await Service.update({ cost:cost,service_status: "In Progress"},{where: {id: serviceId}});
+    await ServiceLog.create({serviceId: serviceId,postedById: postedById, Comment: comment,category:category });
+};
+
+module.exports.addServiceConversation = async ({serviceId,postedById,comment, category}) => {
+  await ServiceLog.create({serviceId: serviceId,postedById: postedById, Comment: comment,category:category });
+  await Service.update({ service_status: category},{where: {id: serviceId}});
+};
+
+
+module.exports.listServiceLogByServiceId = async ({serviceId}) => {
+  return await ServiceLog.findAll({where:{serviceId: serviceId}, raw:true, order: [
+      ['id', 'DESC']
+    ], });
 };

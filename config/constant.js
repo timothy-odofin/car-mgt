@@ -16,6 +16,7 @@ module.exports = {
   DATA_ACCOUNT_ACTIVATED: "Great account activated successfully",
   PASSWORD_CHANGED: "Password changed successfully",
   PASSWORD_RESET: "Password reset successfully",
+  RECORD_DELETED: "Record successfully deleted",
   OTP_SENT: "Otp sent to the registered email. Thank you",
   ACCOUNT_ALREADY_ACTIVE:
     "Your account is active already, please proceed to login",
@@ -28,6 +29,8 @@ module.exports = {
   DATA_NO_TOKEN: "Unauthorized User, Provide Your Token",
   DATA_ALL: "All field are Required",
   USER_NOT_FOUND: "User with specified credentials not found",
+  UPDATE_SUCCESSFUL: "Great record successfully updated",
+  RECORD_NOT_FOUND: "Record with specified constraints not found",
   PRODUCT_NOT_FOUND: "Product with specified credentials not found",
   VEHICLE_NOT_FOUND: "Vehicle with specified credentials not found",
   PRODUCT_ADDED: "Product added successfully",

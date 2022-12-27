@@ -4,22 +4,19 @@ const serviceController = require("../controllers/service_controller");
 
 // Service  API
 router.post("/new", serviceController.serviceRequest);
-router.post("/update", serviceController.serviceRequest);
-router.post("/cost/add/:uuid", serviceController.addServiceCost);
+router.post("/update/cost/:uuid", serviceController.updateServiceCost);
 router.get("/fetch", serviceController.fetchAllService);
-router.patch("/cost/edit/:uuid", serviceController.editServiceCost);
 router.get(
-  "/fetch/provider/:uuid",
-  serviceController.fetchByServiceProvider
+    "/fetch/provider/:uuid",
+    serviceController.fetchByServiceProvider
 );
 router.get(
-  "/fetch/owner/:ownerid",
-  serviceController.fetchByOwnerId
+    "/fetch/filter/:uuid",
+    serviceController.filterALlService
 );
-router.get("/fetch_all_pagination", serviceController.fetchByPagination);
-
+router.get("/fetch/owner/:ownerId", serviceController.fetchByOwnerId);
 // Service Log API
-router.post("/add_service_log", serviceController.addServiceLog);
-router.get("/fetch_service/:uuid", serviceController.fetchService);
-router.get("/fetch_servicelog", serviceController.fetchAllServiceLog);
+router.post("/conversation/add/:serviceId", serviceController.addServiceLog);
+router.delete("/conversation/delete/:uuid", serviceController.deleteServiceConversation);
+router.get("/conversation/list/:serviceId", serviceController.listServiceConversationByServiceId);
 module.exports = router;
