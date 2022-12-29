@@ -1,8 +1,8 @@
 const { User } = require("../models/index");
 const message = require("../config/constant");
-const Sequelize = require('sequelize');
 const {Mapper} = require("../utils/app_util");
 const {findUserByUUID} = require("../controllers/search")
+const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 module.exports = {

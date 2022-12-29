@@ -5,9 +5,9 @@ name: Car management deployment
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "develop_new" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "develop_new" ]
 
 jobs:
   build:
@@ -20,25 +20,27 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-    - name: SSH Remote Connecting to remote
-      uses: appleboy/ssh-action@v0.1.2
-      with:
-        PASSWORD: ${{secrets.CAR_PASSWORD}}
-        HOST: ${{secrets.CAR_HOST}}
-        USERNAME: ${{secrets.CAR_USERNAME}}
-        PORT: ${{secrets.CAR_PORT}}
-        script: |
-          rm -rf /home/dep_user/car-mgt
-          cd /home/dep_user
-          git clone https://github.com/timothy-odofin/car-mgt.git
-          cd /home/dep_user/car-mgt
-          npm install
-          pm2 start app.js
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build --if-present
+      - name: SSH Remote Connecting to remote
+        uses: appleboy/ssh-action@v0.1.2
+        with:
+          PASSWORD: ${{secrets.CAR_PASSWORD}}
+          HOST: ${{secrets.CAR_HOST}}
+          USERNAME: ${{secrets.CAR_USERNAME}}
+          PORT: ${{secrets.CAR_PORT}}
+          script: |
+            cd /home/dep_user/car-mgt
+            pm2 stop app.js
+            rm -rf /home/dep_user/car-mgt
+            cd /home/dep_user
+            git clone https://github.com/timothy-odofin/car-mgt.git
+            cd /home/dep_user/car-mgt
+            npm install
+            pm2 start app.js
