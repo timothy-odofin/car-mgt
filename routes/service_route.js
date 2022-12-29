@@ -4,11 +4,20 @@ const serviceController = require("../controllers/service_controller");
 
 // Service  API
 router.post("/new", serviceController.serviceRequest);
-router.post("/update/cost/:uuid", serviceController.updateServiceCost);
+router.post("/update/:uuid", serviceController.updateServiceCost);
 router.get("/fetch", serviceController.fetchAllService);
 router.get(
     "/fetch/provider/:uuid",
     serviceController.fetchByServiceProvider
+);
+
+router.post(
+    "/item/add/:serviceId",
+    serviceController.addItem
+);
+router.get(
+    "/item/list/:serviceId",
+    serviceController.listItem
 );
 router.get(
     "/fetch/filter/:uuid",

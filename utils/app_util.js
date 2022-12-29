@@ -22,7 +22,8 @@ const Mapper =  {
         return userResponse;
     },
     getSingleUser(user){
-        return {uuid: user["uuid"],
+        return {
+            uuid: user["uuid"],
             accountStatus: user["accountStatus"],
             firstName: user["firstName"],
             lastName: user["lastName"],
@@ -31,7 +32,7 @@ const Mapper =  {
             category: user["category"],
             serviceList: user["account_type"],
             createdAt : user["createdAt"],
-            address: user["address"]}
+            address: user["address"]===null?"NA":user["address"]}
     },
     getPartialUser(user){
         return {uuid: user["uuid"],
