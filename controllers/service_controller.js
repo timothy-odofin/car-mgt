@@ -48,7 +48,9 @@ module.exports = {
     const { uuid } = req.params;
     const { cost, description, postedBy } = req.body;
     if (!cost || !description || !uuid || !postedBy) {
-      return res.status(400).json({ success: false, data: message.DATA_ALL });
+      return res
+        .status(400)
+        .json({ status: message.FAIL, data: message.DATA_ALL });
     }
     const service = await appUtil.findSingleServiceByUuidV2(uuid);
     const postedUser = await appUtil.findUserByUUID(postedBy, res);
@@ -156,11 +158,15 @@ module.exports = {
     }
   },
 
+  /////////////ServiceLog Controller ///////
+
   addServiceLog: async (req, res) => {
     const { serviceId } = req.params;
     const { postedBy, comment, category } = req.body;
     if (!postedBy || !comment || !serviceId || !category) {
-      return res.status(400).json({ success: false, data: message.DATA_ALL });
+      return res
+        .status(400)
+        .json({ status: message.FAIL, data: message.DATA_ALL });
     }
     const service = await appUtil.findSingleServiceByUuidV2(serviceId);
     const postedUser = await appUtil.findUserByUUID(postedBy, res);
@@ -190,14 +196,14 @@ module.exports = {
     if (!serviceId) {
       return res
         .status(200)
-        .json({ success: message.FAIL, data: message.DATA_ALL });
+        .json({ status: message.FAIL, data: message.DATA_ALL });
     }
     try {
       const service = await appUtil.findSingleServiceByUuidV2(serviceId);
       if (!service) {
         return res
           .status(200)
-          .json({ success: message.FAIL, data: message.RECORD_NOT_FOUND });
+          .json({ status: message.FAIL, data: message.RECORD_NOT_FOUND });
       }
       const resultList = await appUtil.listServiceLogByServiceId({
         serviceId: service.id,
@@ -219,19 +225,83 @@ module.exports = {
     if (!uuid) {
       return res
         .status(200)
-        .json({ success: message.FAIL, data: message.DATA_ALL });
+        .json({ status: message.FAIL, data: message.DATA_ALL });
     }
     try {
       const service = await appUtil.findServiceConversationByUUID(uuid);
       if (!service) {
         return res
           .status(200)
-          .json({ success: message.FAIL, data: message.RECORD_NOT_FOUND });
+          .json({ status: message.FAIL, data: message.RECORD_NOT_FOUND });
       }
       await appUtil.deleteServiceConversationByUUID({ id: service.id });
       return res
         .status(200)
         .json({ status: message.SUCCESS, data: message.RECORD_DELETED });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .json({ status: message.FAIL, data: message.DATA_WRONG });
+    }
+  },
+
+  //ServiceItem Controller
+  addItem: async (req, res) => {
+    const { serviceId } = req.params;
+    const { itemName, qty, salePrice } = req.body;
+    if (!itemName || !qty || !serviceId || !salePrice) {
+      return res
+        .status(400)
+        .json({ status: message.FAIL, data: message.DATA_ALL });
+    }
+    const service = await appUtil.findSingleServiceByUuidV2(serviceId);
+    if (!service)
+      return res.json({
+        status: message.FAIL,
+        data: message.RECORD_NOT_FOUND,
+      });
+
+    try {
+      await appUtil.addServiceItem({
+        serviceId: service["id"],
+        itemName: itemName,
+        qty: qty,
+        salePrice: salePrice,
+        amount: qty * salePrice,
+      });
+      return res
+        .status(200)
+        .json({ status: message.SUCCESS, data: message.UPDATE_SUCCESSFUL });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .json({ status: message.FAIL, data: message.DATA_WRONG });
+    }
+  },
+
+  listItem: async (req, res) => {
+    const serviceId = req.params.serviceId;
+    if (!serviceId) {
+      return res
+        .status(200)
+        .json({ status: message.FAIL, data: message.DATA_ALL });
+    }
+    try {
+      const service = await appUtil.findSingleServiceByUuidV2(serviceId);
+      if (!service) {
+        return res
+          .status(200)
+          .json({ status: message.FAIL, data: message.RECORD_NOT_FOUND });
+      }
+      const itemList = await appUtil.listServiceItemByServiceId({
+        serviceId: service.id,
+      });
+      return res.status(200).json({
+        status: message.SUCCESS,
+        data: await Mapper.listServiceItem(itemList),
+      });
     } catch (error) {
       console.log(error);
       return res

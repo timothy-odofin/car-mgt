@@ -4,6 +4,7 @@ const {
   Vehicle,
   Service,
   ServiceLog,
+  ServiceItem,
 } = require("../models/index");
 const message = require("../config/constant");
 
@@ -141,6 +142,30 @@ module.exports.addServiceConversation = async ({
 
 module.exports.listServiceLogByServiceId = async ({ serviceId }) => {
   return await ServiceLog.findAll({
+    where: { serviceId: serviceId },
+    raw: true,
+    order: [["id", "DESC"]],
+  });
+};
+
+module.exports.addServiceItem = async ({
+  serviceId,
+  itemName,
+  qty,
+  salePrice,
+  amount,
+}) => {
+  await ServiceItem.create({
+    serviceId: serviceId,
+    itemName: itemName,
+    qty: qty,
+    salePrice: salePrice,
+    amount: amount,
+  });
+};
+
+module.exports.listServiceItemByServiceId = async ({ serviceId }) => {
+  return await ServiceItem.findAll({
     where: { serviceId: serviceId },
     raw: true,
     order: [["id", "DESC"]],

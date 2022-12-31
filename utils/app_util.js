@@ -31,7 +31,7 @@ const Mapper = {
       category: user["category"],
       serviceList: user["account_type"],
       createdAt: user["createdAt"],
-      address: user["address"],
+      address: user["address"] === null ? "NA" : user["address"],
     };
   },
   getPartialUser(user) {
@@ -94,6 +94,27 @@ const Mapper = {
     if (serviceList) {
       for (let result of serviceList) {
         serviceResponse.push(await this.getSingleServiceLog(result));
+      }
+    }
+    return serviceResponse;
+  },
+
+  async getSingleServiceItem(service) {
+    return {
+      uuid: service["uuid"],
+      itemName: service["itemName"],
+      qty: service["qty"],
+      salePrice: service["salePrice"],
+      amount: service["amount"],
+      dateCreated: service["createdAt"],
+    };
+  },
+
+  async listServiceItem(itemList) {
+    const serviceResponse = [];
+    if (itemList) {
+      for (let result of itemList) {
+        serviceResponse.push(await this.getSingleServiceItem(result));
       }
     }
     return serviceResponse;
