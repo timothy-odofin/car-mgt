@@ -1,4 +1,4 @@
-const { findVehicleById, findUserById } = require("../controllers/search");
+const { findVehicleById, findUserById, listServiceItemByServiceId} = require("../controllers/search");
 
 function findVehicle(id) {
   findVehicleById(id)
@@ -49,10 +49,30 @@ const Mapper = {
       company: user["company"],
     };
   },
+  getSingleServiceItem(user) {
+    return {
+      uuid: user["uuid"],
+      serviceId: user["serviceId"],
+      itemName: user["itemName"],
+      qty: user["qty"],
+      salePrice: user["salePrice"],
+      amount: user["amount"]
+    };
+  },
+  listItem(itemList) {
+    const userResponse = [];
+    if (itemList) {
+      itemList.forEach((item) => {
+        userResponse.push(this.getSingleServiceItem(item));
+      });
+    }
+    return userResponse;
+  },
   async getSingleService(service) {
     const serviceProvider = await findUserById(service["service_provideId"]);
     const serviceOwner = await findUserById(service["service_ownerId"]);
     const vehicle = await findVehicleById(service["vehicleId"]);
+    const itemList = await listServiceItemByServiceId({serviceId: service["id"]});
     return {
       uuid: service["uuid"],
       serviceType: service["service_type"],
@@ -62,6 +82,7 @@ const Mapper = {
       status: service["service_status"],
       datePosted: service["trans_date"],
       dateCreated: service["createdAt"],
+      itemList: this.listItem(itemList),
       serviceProvider: this.getPartialUser(serviceProvider),
       serviceOwner: this.getPartialUser(serviceOwner),
       vehicle: this.getPartialVehicle(vehicle),

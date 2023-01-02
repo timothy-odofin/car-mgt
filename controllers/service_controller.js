@@ -246,6 +246,25 @@ module.exports = {
     }
   },
 
+  deleteServiceItem: async (req, res) => {
+    const uuid = req.params.serviceId;
+    if (!uuid) {
+      return res
+          .status(200)
+          .json({ status: message.FAIL, data: message.DATA_ALL });
+    }
+    try {
+       await appUtil.deleteServiceItem(uuid);
+      return res
+          .status(200)
+          .json({ status: message.SUCCESS, data: message.RECORD_DELETED });
+    } catch (error) {
+      console.log(error);
+      return res
+          .status(500)
+          .json({ status: message.FAIL, data: message.DATA_WRONG });
+    }
+  },
   //ServiceItem Controller
   addItem: async (req, res) => {
     const { serviceId } = req.params;
@@ -264,7 +283,7 @@ module.exports = {
 
     try {
       await appUtil.addServiceItem({
-        serviceId: service["id"],
+        serviceId: service,
         itemName: itemName,
         qty: qty,
         salePrice: salePrice,
@@ -300,7 +319,7 @@ module.exports = {
       });
       return res.status(200).json({
         status: message.SUCCESS,
-        data: await Mapper.listServiceItem(itemList),
+        data:  Mapper.listItem(itemList),
       });
     } catch (error) {
       console.log(error);
