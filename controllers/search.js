@@ -100,7 +100,8 @@ module.exports.findServiceConversationByUUID = async (uuid) => {
 };
 
 module.exports.deleteServiceItem = async (uuid) => {
-  await ServiceLog.destroy({ where: { uuid:uuid } });
+  console.log("Received UUID*************", uuid)
+  await ServiceItem.destroy({ where: { uuid:uuid } });
 };
 module.exports.deleteServiceConversationByUUID = async ({ id }) => {
   await ServiceLog.destroy({ where: { id: id } });

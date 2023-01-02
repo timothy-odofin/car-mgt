@@ -49,6 +49,8 @@ const Mapper = {
       company: user["company"],
     };
   },
+
+
   getSingleServiceItem(user) {
     return {
       uuid: user["uuid"],
@@ -61,28 +63,31 @@ const Mapper = {
   },
   listItem(itemList) {
     const userResponse = [];
+    let total=0;
     if (itemList) {
       itemList.forEach((item) => {
         userResponse.push(this.getSingleServiceItem(item));
+        total+=item["amount"]
       });
     }
-    return userResponse;
+    return {data: userResponse, totalCost: total};
   },
   async getSingleService(service) {
     const serviceProvider = await findUserById(service["service_provideId"]);
     const serviceOwner = await findUserById(service["service_ownerId"]);
     const vehicle = await findVehicleById(service["vehicleId"]);
     const itemList = await listServiceItemByServiceId({serviceId: service["id"]});
+    const item = this.listItem(itemList);
     return {
       uuid: service["uuid"],
       serviceType: service["service_type"],
-      cost: service["cost"],
+      cost: item["totalCost"],
       rate: service["rate"],
       description: service["owner_complain"],
       status: service["service_status"],
       datePosted: service["trans_date"],
       dateCreated: service["createdAt"],
-      itemList: this.listItem(itemList),
+      itemList: item["data"],
       serviceProvider: this.getPartialUser(serviceProvider),
       serviceOwner: this.getPartialUser(serviceOwner),
       vehicle: this.getPartialVehicle(vehicle),
@@ -109,6 +114,31 @@ const Mapper = {
     }
     return serviceResponse;
   },
+  async listCar(carList) {
+    const carItems = [];
+    if (carList) {
+      for (let car of carList) {
+        const realUser = await this.getFullVehicle(car);
+        carItems.push(realUser);
+      }
+    }
+    return carItems;
+  },
+  async getFullVehicle(user) {
+    const owner = await findUserById(user["ownerId"]);
+    return {
+      uuid: user["uuid"],
+      vehicleNumber: user["vehicleNumber"],
+      company: user["company"],
+      regNumber: user["regNumber"],
+      color: user["color"],
+      model: user["model"],
+      image: user["image"],
+      owner: this.getPartialUser(owner),
+      status: user["status"],
+      createdAt: user["createdAt"],
+    };
+  },
 
   async listServiceConversation(serviceList) {
     const serviceResponse = [];
@@ -118,27 +148,6 @@ const Mapper = {
       }
     }
     return serviceResponse;
-  },
-
-  async getSingleServiceItem(service) {
-    return {
-      uuid: service["uuid"],
-      itemName: service["itemName"],
-      qty: service["qty"],
-      salePrice: service["salePrice"],
-      amount: service["amount"],
-      dateCreated: service["createdAt"],
-    };
-  },
-
-  async listServiceItem(itemList) {
-    const serviceResponse = [];
-    if (itemList) {
-      for (let result of itemList) {
-        serviceResponse.push(await this.getSingleServiceItem(result));
-      }
-    }
-    return serviceResponse;
-  },
+  }
 };
 module.exports.Mapper = Mapper;
