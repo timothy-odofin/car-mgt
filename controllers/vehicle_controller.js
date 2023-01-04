@@ -1,6 +1,9 @@
 const { Vehicle, User } = require("../models/index");
 const message = require("../config/constant");
 const axios = require("axios");
+const appUtil = require("./search");
+const {Mapper} = require("../utils/app_util");
+const {Service} = require("../models");
 const vehicleURL = "https://swipe.fund:7575/paga/verification/vin?vin=";
 
 module.exports = {
@@ -30,7 +33,9 @@ module.exports = {
       status,
     } = req.body;
     try {
-      const user = await User.findOne({ where: { uuid: userUuid } });
+      const postedUser = await appUtil.findUserByUUID(userUuid, res);
+      if (!postedUser)
+        return res.json({ status: message.FAIL, data: message.RECORD_NOT_FOUND });
       await Vehicle.create({
         vehicleNumber: vehicleNumber,
         company: company,
@@ -38,26 +43,26 @@ module.exports = {
         color: color,
         model: model,
         image: image,
-        ownerId: user.id,
+        ownerId: postedUser.id,
         status: status,
       });
       return res.json({ status: message.SUCCESS, data: message.VEHICLE_ADDED });
     } catch (error) {
       console.log(error);
       return res
-        .status(500)
+        .status(200)
         .json({ status: message.FAIL, data: message.DATA_WRONG });
     }
   },
 
   getAllVehicle: async (req, res) => {
     try {
-      const vehicle = await Vehicle.findAll({ include: ["users", "services"] });
-      return res.status(201).json({ status: message.SUCCESS, data: vehicle });
+      const vehicle = await Vehicle.findAll({ raw:true});
+      return res.status(200).json({ status: message.SUCCESS, data: await Mapper.listCar(vehicle) });
     } catch (error) {
       console.log(error);
       return res
-        .status(500)
+        .status(200)
         .json({ status: message.FAIL, data: message.DATA_WRONG });
     }
   },
@@ -94,7 +99,7 @@ module.exports = {
     } catch (error) {
       console.log(error);
       return res
-        .status(500)
+        .status(200)
         .json({ status: message.FAIL, data: message.DATA_WRONG });
     }
   },
@@ -103,10 +108,10 @@ module.exports = {
     const uuid = req.params.uuid;
     try {
       const vehicle = await Vehicle.findOne({ where: { uuid } });
-      res.status(200).json({ status: message.SUCCESS, data: vehicle });
+      res.status(200).json({ status: message.SUCCESS, data: await Mapper.getFullVehicle(vehicle) });
     } catch (error) {
       return res
-        .status(500)
+        .status(200)
         .json({ status: message.FAIL, data: message.DATA_WRONG });
     }
   },
@@ -114,13 +119,32 @@ module.exports = {
   removeVehicle: async (req, res) => {
     const uuid = req.params.uuid;
     try {
-      const vehicle = await Vehicle.findOne({ where: { uuid } });
-      await vehicle.destroy();
+      await Vehicle.destroy({ where: { uuid } });
       return res.json({ status: message.SUCCESS, Data: message.DATA_DELETED });
     } catch (error) {
       return res
         .status(400)
         .json({ status: message.FAIL, data: message.DATA_WRONG });
+    }
+  },
+  getAllVehicleByOwner: async (req, res) => {
+    try {
+      const { ownerId } = req.params;
+      const user = await appUtil.findUserByUUID(ownerId, res);
+      const service = await Vehicle.findAll({
+        where: { ownerId: user.id },
+        raw: true,
+        order: [["id", "DESC"]],
+      });
+      return res.status(200).json({
+        status: message.SUCCESS,
+        data: await Mapper.listCar(service),
+      });
+    } catch (error) {
+      console.log(error);
+      return res
+          .status(200)
+          .json({ status: message.FAIL, data: message.DATA_WRONG });
     }
   },
 };

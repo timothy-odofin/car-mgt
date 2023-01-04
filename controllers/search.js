@@ -103,6 +103,10 @@ module.exports.findServiceConversationByUUID = async (uuid) => {
   return await ServiceLog.findOne({ where: { uuid: uuid }, raw: true });
 };
 
+module.exports.deleteServiceItem = async (uuid) => {
+  console.log("Received UUID*************", uuid)
+  await ServiceItem.destroy({ where: { uuid:uuid } });
+};
 module.exports.deleteServiceConversationByUUID = async ({ id }) => {
   await ServiceLog.destroy({ where: { id: id } });
 };
@@ -153,19 +157,23 @@ module.exports.listServiceLogByServiceId = async ({ serviceId }) => {
 };
 
 module.exports.addServiceItem = async ({
-  serviceId,
+  service,
   itemName,
   qty,
   salePrice,
   amount,
 }) => {
   await ServiceItem.create({
-    serviceId: serviceId,
+    serviceId: service["id"],
     itemName: itemName,
     qty: qty,
     salePrice: salePrice,
     amount: amount,
   });
+  await Service.update(
+      { cost: service["cost"]+amount },
+      { where: { id: service["id"] } }
+  );
 };
 
 module.exports.listServiceItemByServiceId = async ({ serviceId }) => {

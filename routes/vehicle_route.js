@@ -6,7 +6,8 @@ router.post("/verify/:vin", vehicleController.verifyVehicle);
 router.post("/add", vehicleController.addVehicle);
 router.get("/list", vehicleController.getAllVehicle);
 router.patch("/update/:uuid", vehicleController.vehicleUpdate);
-router.get("/retrievesingle/:uuid", vehicleController.getVehicle);
+router.get("/retrieve/:uuid", vehicleController.getVehicle);
+router.get("/list/by-owner/:ownerId", vehicleController.getAllVehicleByOwner);
 router.delete("/remove/:uuid", vehicleController.removeVehicle);
 
 module.exports = router;

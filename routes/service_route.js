@@ -24,4 +24,5 @@ router.get(
 // Service_Item Routes
 router.post("/item/add/:serviceId", serviceController.addItem);
 router.get("/item/list/:serviceId", serviceController.listItem);
+router.delete("/item/delete/:serviceId", serviceController.deleteServiceItem);
 module.exports = router;

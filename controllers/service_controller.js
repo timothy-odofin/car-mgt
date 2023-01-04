@@ -39,7 +39,7 @@ module.exports = {
     } catch (error) {
       console.log(error);
       return res
-        .status(500)
+        .status(200)
         .json({ status: message.FAIL, data: message.DATA_WRONG });
     }
   },
@@ -71,7 +71,7 @@ module.exports = {
     } catch (error) {
       console.log(error);
       return res
-        .status(500)
+        .status(200)
         .json({ status: message.FAIL, data: message.DATA_WRONG });
     }
   },
@@ -79,14 +79,14 @@ module.exports = {
   fetchAllService: async (req, res) => {
     try {
       const service = await Service.findAll({ raw: true });
-      return res.status(201).json({
+      return res.status(200).json({
         status: message.SUCCESS,
         data: await Mapper.listService(service),
       });
     } catch (error) {
       console.log(error);
       return res
-        .status(500)
+        .status(200)
         .json({ status: message.FAIL, data: message.DATA_WRONG });
     }
   },
@@ -100,14 +100,14 @@ module.exports = {
         raw: true,
         order: [["id", "DESC"]],
       });
-      return res.status(201).json({
+      return res.status(200).json({
         status: message.SUCCESS,
         data: await Mapper.listService(service),
       });
     } catch (error) {
       console.log(error);
       return res
-        .status(500)
+        .status(200)
         .json({ status: message.FAIL, data: message.DATA_WRONG });
     }
   },
@@ -125,14 +125,14 @@ module.exports = {
         raw: true,
         order: [["id", "DESC"]],
       });
-      return res.status(201).json({
+      return res.status(200).json({
         status: message.SUCCESS,
         data: await Mapper.listService(service),
       });
     } catch (error) {
       console.log(error);
       return res
-        .status(500)
+        .status(200)
         .json({ status: message.FAIL, data: message.DATA_WRONG });
     }
   },
@@ -146,14 +146,14 @@ module.exports = {
         raw: true,
         order: [["id", "DESC"]],
       });
-      return res.status(201).json({
+      return res.status(200).json({
         status: message.SUCCESS,
         data: await Mapper.listService(service),
       });
     } catch (error) {
       console.log(error);
       return res
-        .status(500)
+        .status(200)
         .json({ status: message.FAIL, data: message.DATA_WRONG });
     }
   },
@@ -186,7 +186,7 @@ module.exports = {
     } catch (error) {
       console.log(error);
       return res
-        .status(500)
+        .status(200)
         .json({ status: message.FAIL, data: message.DATA_WRONG });
     }
   },
@@ -215,7 +215,7 @@ module.exports = {
     } catch (error) {
       console.log(error);
       return res
-        .status(500)
+        .status(200)
         .json({ status: message.FAIL, data: message.DATA_WRONG });
     }
   },
@@ -241,11 +241,30 @@ module.exports = {
     } catch (error) {
       console.log(error);
       return res
-        .status(500)
+        .status(200)
         .json({ status: message.FAIL, data: message.DATA_WRONG });
     }
   },
 
+  deleteServiceItem: async (req, res) => {
+    const uuid = req.params.serviceId;
+    if (!uuid) {
+      return res
+          .status(200)
+          .json({ status: message.FAIL, data: message.DATA_ALL });
+    }
+    try {
+       await appUtil.deleteServiceItem(uuid);
+      return res
+          .status(200)
+          .json({ status: message.SUCCESS, data: message.RECORD_DELETED });
+    } catch (error) {
+      console.log(error);
+      return res
+          .status(200)
+          .json({ status: message.FAIL, data: message.DATA_WRONG });
+    }
+  },
   //ServiceItem Controller
   addItem: async (req, res) => {
     const { serviceId } = req.params;
@@ -264,7 +283,7 @@ module.exports = {
 
     try {
       await appUtil.addServiceItem({
-        serviceId: service["id"],
+        service: service,
         itemName: itemName,
         qty: qty,
         salePrice: salePrice,
@@ -276,7 +295,7 @@ module.exports = {
     } catch (error) {
       console.log(error);
       return res
-        .status(500)
+        .status(200)
         .json({ status: message.FAIL, data: message.DATA_WRONG });
     }
   },
@@ -300,12 +319,12 @@ module.exports = {
       });
       return res.status(200).json({
         status: message.SUCCESS,
-        data: await Mapper.listServiceItem(itemList),
+        data:  Mapper.listItem(itemList),
       });
     } catch (error) {
       console.log(error);
       return res
-        .status(500)
+        .status(200)
         .json({ status: message.FAIL, data: message.DATA_WRONG });
     }
   },
