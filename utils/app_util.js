@@ -119,5 +119,28 @@ const Mapper = {
     }
     return serviceResponse;
   },
+
+  async getSingleProduct(product) {
+    const postedBy = await findUserById(product["postedById"]);
+    return {
+      uuid: product["uuid"],
+      name: product["name"],
+      description: product["description"],
+      availabe: product["avaliable_quatity"],
+      unit: product["unit_price"],
+      dateCreated: product["createdAt"],
+      postedBy: this.getPartialUser(postedBy),
+    };
+  },
+
+  async listProduct(product) {
+    const productResponse = [];
+    if (product) {
+      for (let result of product) {
+        productResponse.push(await this.getSingleProduct(result));
+      }
+    }
+    return productResponse;
+  },
 };
 module.exports.Mapper = Mapper;

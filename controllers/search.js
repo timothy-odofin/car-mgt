@@ -27,6 +27,10 @@ module.exports.findVehicleById = async (id) => {
   return await Vehicle.findOne({ where: { id: id }, raw: true });
 };
 
+module.exports.findBySingleProduct = (userUuid) => {
+  return Product.findOne({ where: { uuid: userUuid }, raw: true });
+};
+
 module.exports.findProductByUUID = async (userUuid, response) => {
   const product = await Product.findOne({
     where: { uuid: userUuid },

@@ -21,7 +21,7 @@ app.use("/setting", settingRoute);
 app.use("/entrance", entranceRoute);
 app.use("/user", userRoute);
 // app.use("/user", verified, userRoute);
-app.use("/product", verified, productRoute);
+app.use("/product", productRoute);
 app.use("/vehicle", verified, vehicleRoute);
 app.use("/insurance", verified, insuranceRoute);
 app.use("/service", serviceRoute);
