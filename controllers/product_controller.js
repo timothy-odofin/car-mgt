@@ -66,9 +66,9 @@ module.exports = {
   fetchProduct: async (req, res) => {
     try {
       const product = await Product.findAll({});
-      res.status(201).json({
+      return res.status(201).json({
         status: message.SUCCESS,
-        data: await Mapper.listProduct(product),
+        data: product,
       });
     } catch (error) {
       console.log(error);

@@ -104,8 +104,8 @@ module.exports.findServiceConversationByUUID = async (uuid) => {
 };
 
 module.exports.deleteServiceItem = async (uuid) => {
-  console.log("Received UUID*************", uuid)
-  await ServiceItem.destroy({ where: { uuid:uuid } });
+  // console.log("Received UUID*************", uuid);
+  await ServiceItem.destroy({ where: { uuid: uuid } });
 };
 module.exports.deleteServiceConversationByUUID = async ({ id }) => {
   await ServiceLog.destroy({ where: { id: id } });
@@ -171,8 +171,8 @@ module.exports.addServiceItem = async ({
     amount: amount,
   });
   await Service.update(
-      { cost: service["cost"]+amount },
-      { where: { id: service["id"] } }
+    { cost: service["cost"] + amount },
+    { where: { id: service["id"] } }
   );
 };
 
@@ -181,5 +181,27 @@ module.exports.listServiceItemByServiceId = async ({ serviceId }) => {
     where: { serviceId: serviceId },
     raw: true,
     order: [["id", "DESC"]],
+  });
+};
+
+module.exports.addVehicle = async ({
+  vehicleNumber,
+  company,
+  regNumber,
+  color,
+  model,
+  image,
+  postedById,
+  status,
+}) => {
+  await Vehicle.create({
+    vehicleNumber: vehicleNumber,
+    company: company,
+    regNumber: regNumber,
+    color: color,
+    model: model,
+    image: image,
+    postedById: postedById["id"],
+    status: status,
   });
 };

@@ -2,6 +2,7 @@ const {
   findVehicleById,
   findUserById,
   listServiceItemByServiceId,
+  listVehiclePostedById,
 } = require("../controllers/search");
 
 function findVehicle(id) {
@@ -122,8 +123,8 @@ const Mapper = {
   async listCar(carList) {
     const carItems = [];
     if (carList) {
-      for (let car of carList) {
-        const realUser = await this.getFullVehicle(car);
+      for (let vehicle of carList) {
+        const realUser = await this.getFullVehicle(vehicle);
         carItems.push(realUser);
       }
     }
@@ -153,6 +154,29 @@ const Mapper = {
       }
     }
     return serviceResponse;
+  },
+
+  async getSingleProduct(product) {
+    const postedBy = await findUserById(product["postedById"]);
+    return {
+      uuid: product["uuid"],
+      name: product["name"],
+      description: product["description"],
+      quality: product["avaliable_quatity"],
+      price: product["unit_price"],
+      dateCreated: product["createdAt"],
+      postedBy: this.getPartialUser(postedBy),
+    };
+  },
+
+  async listProduct(product) {
+    const productResponse = [];
+    if (product) {
+      for (let result of product) {
+        productResponse.push(await this.getSingleProduct(result));
+      }
+    }
+    return productResponse;
   },
 };
 module.exports.Mapper = Mapper;

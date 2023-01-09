@@ -21,14 +21,9 @@ app.use("/setting", settingRoute);
 app.use("/entrance", entranceRoute);
 app.use("/user", userRoute);
 // app.use("/user", verified, userRoute);
-<<<<<<< HEAD
 app.use("/product", productRoute);
-app.use("/vehicle", verified, vehicleRoute);
-=======
-app.use("/product", verified, productRoute);
-app.use("/vehicle",  vehicleRoute);
->>>>>>> 31cb4a4ead686a017f47caa9864bb6f978848973
-app.use("/insurance", verified, insuranceRoute);
+app.use("/vehicle", vehicleRoute);
+app.use("/insurance", insuranceRoute);
 app.use("/service", serviceRoute);
 // CORS POLICY
 app.use(cors());
