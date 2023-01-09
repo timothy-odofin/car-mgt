@@ -35,12 +35,18 @@ const Mapper = {
     };
   },
   getPartialUser(user) {
-    return {
-      uuid: user["uuid"],
-      firstName: user["firstName"],
-      lastName: user["lastName"],
-      phone: user["phone"],
-    };
+    if(user){
+      return {
+        uuid: user["uuid"],
+        firstName: user["firstName"],
+        lastName: user["lastName"],
+        phone: user["phone"],
+      };
+
+    }else{
+      return {}
+
+    }
   },
   getPartialVehicle(user) {
     return {
