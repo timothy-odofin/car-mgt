@@ -6,19 +6,19 @@ const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 
 module.exports = {
-  // getAllUsers: async (req, res) => {
-  //   try {
-  //     const user = await User.findAll({});
-  //     return res
-  //       .status(201)
-  //       .json({ status: message.SUCCESS, data: Mapper.listUser(user) });
-  //   } catch (error) {
-  //     console.log(error);
-  //     return res
-  //       .status(500)
-  //       .json({ status: message.FAIL, data: message.DATA_WRONG });
-  //   }
-  // },
+  getAllUsers: async (req, res) => {
+    try {
+      const user = await User.findAll({});
+      return res
+        .status(201)
+        .json({ status: message.SUCCESS, data: Mapper.listUser(user) });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .json({ status: message.FAIL, data: message.DATA_WRONG });
+    }
+  },
 
   listUserByService: async (req, res) => {
     try {
