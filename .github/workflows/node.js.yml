@@ -42,5 +42,6 @@ jobs:
             cd /home/dep_user
             git clone https://github.com/timothy-odofin/car-mgt.git
             cd /home/dep_user/car-mgt
+            git checkout develop_new
             npm install
             pm2 start app.js
