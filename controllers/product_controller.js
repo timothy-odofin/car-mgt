@@ -38,37 +38,12 @@ module.exports = {
     }
   },
 
-  // addProduct: async (req, res) => {
-  //   const { name, description, avaliable_quatity, unit_price, userUuid } =
-  //     req.body;
-
-  //   try {
-  //     const user = await User.findOne({ where: { uuid: userUuid } });
-  //     const product = await Product.create({
-  //       name,
-  //       description,
-  //       avaliable_quatity,
-  //       unit_price,
-  //       postedById: user.id,
-  //     });
-  //     return res.json({
-  //       status: message.SUCCESS,
-  //       data: product,
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //     return res
-  //       .status(404)
-  //       .json({ status: message.FAIL, data: message.DATA_WRONG });
-  //   }
-  // },
-
   fetchProduct: async (req, res) => {
     try {
       const product = await Product.findAll({});
       return res.status(201).json({
         status: message.SUCCESS,
-        data: product,
+        data: await Mapper.listProduct(product),
       });
     } catch (error) {
       console.log(error);
@@ -97,7 +72,7 @@ module.exports = {
   getProduct: async (req, res, next) => {
     const uuid = req.params.uuid;
     try {
-      const product = await findBySingleProduct(uuid, res);
+      const product = await Product.findOne({ where: { uuid } });
       res.status(200).json({
         status: message.SUCCESS,
         data: Mapper.getSingleProduct(product),
@@ -110,14 +85,10 @@ module.exports = {
   removeProduct: async (req, res) => {
     const uuid = req.params.uuid;
     try {
-      const product = await Product.findOne({ where: { uuid } });
-      await product.destroy();
-      if (!product) {
-        return res.status(404).json({ status: process.env.ERROR });
-      }
+      await Product.destroy({ where: { uuid } });
       return res.json({
-        Status: process.env.SUCCESS,
-        data: message.DATA_DELETED,
+        status: message.SUCCESS,
+        Data: message.DATA_DELETED,
       });
     } catch (error) {
       return res

@@ -40,25 +40,27 @@ const Mapper = {
     };
   },
   getPartialUser(user) {
-    if(user){
+    if (user) {
       return {
         uuid: user["uuid"],
         firstName: user["firstName"],
         lastName: user["lastName"],
         phone: user["phone"],
       };
-
-    }else{
-      return {}
-
+    } else {
+      return {};
     }
   },
   getPartialVehicle(user) {
-    return {
-      uuid: user["uuid"],
-      vehicleNumber: user["vehicleNumber"],
-      company: user["company"],
-    };
+    if (user) {
+      return {
+        uuid: user["uuid"],
+        vehicleNumber: user["vehicleNumber"],
+        company: user["company"],
+      };
+    } else {
+      return {};
+    }
   },
 
   getSingleServiceItem(user) {
@@ -137,19 +139,23 @@ const Mapper = {
     return carItems;
   },
   async getFullVehicle(user) {
-    const owner = await findUserById(user["ownerId"]);
-    return {
-      uuid: user["uuid"],
-      vehicleNumber: user["vehicleNumber"],
-      company: user["company"],
-      regNumber: user["regNumber"],
-      color: user["color"],
-      model: user["model"],
-      image: user["image"],
-      owner: this.getPartialUser(owner),
-      status: user["status"],
-      createdAt: user["createdAt"],
-    };
+    if (user) {
+      const owner = await findUserById(user["ownerId"]);
+      return {
+        uuid: user["uuid"],
+        vehicleNumber: user["vehicleNumber"],
+        company: user["company"],
+        regNumber: user["regNumber"],
+        color: user["color"],
+        model: user["model"],
+        image: user["image"],
+        owner: this.getPartialUser(owner),
+        status: user["status"],
+        createdAt: user["createdAt"],
+      };
+    } else {
+      return {};
+    }
   },
 
   async listServiceConversation(serviceList) {
@@ -175,14 +181,15 @@ const Mapper = {
     };
   },
 
-  async listProduct(product) {
-    const productResponse = [];
-    if (product) {
-      for (let result of product) {
-        productResponse.push(await this.getSingleProduct(result));
+  async listProduct(productList) {
+    const productItem = [];
+    if (productList) {
+      for (let product of productList) {
+        const realProduct = await this.getSingleProduct(product);
+        productItem.push(realProduct);
       }
     }
-    return productResponse;
+    return productItem;
   },
 };
 module.exports.Mapper = Mapper;

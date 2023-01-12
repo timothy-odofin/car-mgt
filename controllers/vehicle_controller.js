@@ -81,10 +81,11 @@ module.exports = {
       color,
       model,
       image,
-      ownerId,
+      userProviderUuid,
       status,
     } = req.body;
     try {
+      const postedUser = await appUtil.findBySingleUser(userProviderUuid);
       const vehicle = await Vehicle.findOne({ where: { uuid } });
       (vehicle.vehicleNumber = vehicleNumber),
         (vehicle.company = company),
@@ -92,7 +93,7 @@ module.exports = {
         (vehicle.color = color),
         (vehicle.model = model),
         (vehicle.image = image),
-        (vehicle.ownerId = ownerId),
+        (vehicle.postedUser = postedUser.id),
         (vehicle.status = status),
         await vehicle.save();
       if (!vehicle) {

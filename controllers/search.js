@@ -183,25 +183,3 @@ module.exports.listServiceItemByServiceId = async ({ serviceId }) => {
     order: [["id", "DESC"]],
   });
 };
-
-module.exports.addVehicle = async ({
-  vehicleNumber,
-  company,
-  regNumber,
-  color,
-  model,
-  image,
-  postedById,
-  status,
-}) => {
-  await Vehicle.create({
-    vehicleNumber: vehicleNumber,
-    company: company,
-    regNumber: regNumber,
-    color: color,
-    model: model,
-    image: image,
-    postedById: postedById["id"],
-    status: status,
-  });
-};

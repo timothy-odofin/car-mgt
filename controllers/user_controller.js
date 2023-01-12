@@ -1,15 +1,38 @@
 const { User } = require("../models/index");
 const message = require("../config/constant");
-const {Mapper} = require("../utils/app_util");
-const {findUserByUUID} = require("../controllers/search")
-const Sequelize = require('sequelize');
+const { Mapper } = require("../utils/app_util");
+const { findUserByUUID } = require("../controllers/search");
+const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 
 module.exports = {
-  getAllUsers: async (req, res) => {
+  // getAllUsers: async (req, res) => {
+  //   try {
+  //     const user = await User.findAll({});
+  //     return res
+  //       .status(201)
+  //       .json({ status: message.SUCCESS, data: Mapper.listUser(user) });
+  //   } catch (error) {
+  //     console.log(error);
+  //     return res
+  //       .status(500)
+  //       .json({ status: message.FAIL, data: message.DATA_WRONG });
+  //   }
+  // },
+
+  listUserByService: async (req, res) => {
     try {
-      const user = await User.findAll({});
-      return res.status(201).json({ status: message.SUCCESS, data:  Mapper.listUser(user) });
+      const serviceType = req.params.serviceType;
+      const user = await User.findAll({
+        where: {
+          account_type: {
+            [Op.like]: `%${serviceType}%`,
+          },
+        },
+      });
+      return res
+        .status(201)
+        .json({ status: message.SUCCESS, data: Mapper.listUser(user) });
     } catch (error) {
       console.log(error);
       return res
@@ -18,26 +41,13 @@ module.exports = {
     }
   },
 
-  listUserByService: async (req, res) => {
-    try {
-      const serviceType = req.params.serviceType;
-      const user = await User.findAll({where:{account_type: {
-            [Op.like]: `%${serviceType}%`
-          }}});
-      return res.status(201).json({ status: message.SUCCESS, data:  Mapper.listUser(user) });
-    } catch (error) {
-      console.log(error);
-      return res
-          .status(500)
-          .json({ status: message.FAIL, data: message.DATA_WRONG });
-    }
-  },
-
   getUser: async (req, res, next) => {
     const uuid = req.params.uuid;
     try {
-      const user =  await findUserByUUID(uuid,res)
-      res.status(200).json({ status: message.SUCCESS, data: Mapper.getSingleUser(user) });
+      const user = await findUserByUUID(uuid, res);
+      res
+        .status(200)
+        .json({ status: message.SUCCESS, data: Mapper.getSingleUser(user) });
     } catch (error) {
       return res
         .status(500)
@@ -46,21 +56,30 @@ module.exports = {
   },
 
   fetchByPagination: async (req, res) => {
-    const { size, page } = req.query;
-    try {
-      const user = await User.findAll({
-        limit: size,
-        offset: page,
-        where: {},
-      });
+    const pageInteger = Number.parseInt(+req.query.page);
+    const sizeInteger = Number.parseInt(+req.query.size);
 
-      return res.status(201).json({ status: message.SUCCESS, data:  Mapper.listUser(user) });
-    } catch (error) {
-      console.log(error);
-      return res
-        .status(500)
-        .json({ status: message.FAIL, data: message.DATA_WRONG });
+    let page = 0;
+    if (!Number.isNaN(pageInteger) && pageInteger > 0) {
+      page = pageInteger;
     }
+
+    let size = 10;
+    if (
+      !Number.isNaN(sizeInteger) &&
+      !(sizeInteger > 10) &&
+      !(sizeInteger < 1)
+    ) {
+      size = sizeInteger;
+    }
+    const users = await User.findAndCountAll({
+      limit: size,
+      offset: page * size,
+    });
+    res.send({
+      status: process.env.PAGINATION,
+      data: users,
+    });
   },
 
   updateUser: async (req, res) => {
@@ -90,6 +109,7 @@ module.exports = {
         (user.contact = contact),
         (user.address = address),
         (user.password = password),
+        (user.photograph = photograph),
         (user.account_type = account_type),
         (user.account_disable = account_disable),
         (user.category = category);
