@@ -127,6 +127,7 @@ module.exports = {
         .json({ status: message.FAIL, data: message.DATA_WRONG });
     }
   },
+  //No issue with the application
   getAllVehicleByOwner: async (req, res) => {
     try {
       const { ownerId } = req.params;
