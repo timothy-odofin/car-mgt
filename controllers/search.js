@@ -27,6 +27,10 @@ module.exports.findVehicleById = async (id) => {
   return await Vehicle.findOne({ where: { id: id }, raw: true });
 };
 
+module.exports.findBySingleProduct = (userUuid) => {
+  return Product.findOne({ where: { uuid: userUuid }, raw: true });
+};
+
 module.exports.findProductByUUID = async (userUuid, response) => {
   const product = await Product.findOne({
     where: { uuid: userUuid },
@@ -100,8 +104,8 @@ module.exports.findServiceConversationByUUID = async (uuid) => {
 };
 
 module.exports.deleteServiceItem = async (uuid) => {
-  console.log("Received UUID*************", uuid)
-  await ServiceItem.destroy({ where: { uuid:uuid } });
+  // console.log("Received UUID*************", uuid);
+  await ServiceItem.destroy({ where: { uuid: uuid } });
 };
 module.exports.deleteServiceConversationByUUID = async ({ id }) => {
   await ServiceLog.destroy({ where: { id: id } });
@@ -167,8 +171,8 @@ module.exports.addServiceItem = async ({
     amount: amount,
   });
   await Service.update(
-      { cost: service["cost"]+amount },
-      { where: { id: service["id"] } }
+    { cost: service["cost"] + amount },
+    { where: { id: service["id"] } }
   );
 };
 

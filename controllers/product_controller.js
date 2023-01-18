@@ -1,37 +1,50 @@
-const { Product, User } = require("../models/index");
+const { Product } = require("../models/index");
 const message = require("../config/constant");
+const appUtil = require("../controllers/search");
+const { Mapper } = require("../utils/app_util");
 
 module.exports = {
   addProduct: async (req, res) => {
-    console.log(req.body);
-    const { name, description, avaliable_quatity, unit_price, userUuid } =
-      req.body;
-
+    const {
+      name,
+      description,
+      avaliable_quatity,
+      unit_price,
+      userProviderUuid,
+    } = req.body;
     try {
-      const user = await User.findOne({ where: { uuid: userUuid } });
-      const product = await Product.create({
-        name,
-        description,
-        avaliable_quatity,
-        unit_price,
-        postedById: user.id,
+      const userProvider = await appUtil.findBySingleUser(userProviderUuid);
+      if (!userProvider) {
+        return res
+          .status(404)
+          .json({ status: message.FAIL, data: message.SERVICE_REQUEST });
+      }
+      await Product.create({
+        name: name,
+        description: description,
+        avaliable_quatity: avaliable_quatity,
+        unit_price: unit_price,
+        postedById: userProvider.id,
       });
       return res.json({
         status: message.SUCCESS,
-        data: product,
+        data: message.PRODUCT_ADDED,
       });
     } catch (error) {
       console.log(error);
       return res
-        .status(404)
+        .status(500)
         .json({ status: message.FAIL, data: message.DATA_WRONG });
     }
   },
 
   fetchProduct: async (req, res) => {
     try {
-      const product = await Product.findAll({ include: "user" });
-      res.status(201).json({ status: message.SUCCESS, data: product });
+      const product = await Product.findAll({});
+      return res.status(201).json({
+        status: message.SUCCESS,
+        data: await Mapper.listProduct(product),
+      });
     } catch (error) {
       console.log(error);
       return res
@@ -60,10 +73,10 @@ module.exports = {
     const uuid = req.params.uuid;
     try {
       const product = await Product.findOne({ where: { uuid } });
-      if (!product) {
-        return res.status(404).json({ status: process.env.ERROR });
-      }
-      res.status(200).json({ status: message.SUCCESS, data: product });
+      res.status(200).json({
+        status: message.SUCCESS,
+        data: Mapper.getSingleProduct(product),
+      });
     } catch (error) {
       res.status(500).json({ status: message.FAIL, data: message.DATA_WRONG });
     }
@@ -72,14 +85,10 @@ module.exports = {
   removeProduct: async (req, res) => {
     const uuid = req.params.uuid;
     try {
-      const product = await Product.findOne({ where: { uuid } });
-      await product.destroy();
-      if (!product) {
-        return res.status(404).json({ status: process.env.ERROR });
-      }
+      await Product.destroy({ where: { uuid } });
       return res.json({
-        Status: process.env.SUCCESS,
-        data: message.DATA_DELETED,
+        status: message.SUCCESS,
+        Data: message.DATA_DELETED,
       });
     } catch (error) {
       return res

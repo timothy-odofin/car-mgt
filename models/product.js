@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate({ User }) {
       // define association here
-      this.belongsTo(User, { foreignKey: "postedById", as: "user" });
+      // this.belongsTo(User, { foreignKey: "postedById", as: "user" });
     }
     toJSON() {
       return { ...this.get(), id: undefined, postedById: undefined };

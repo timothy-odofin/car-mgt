@@ -1,4 +1,9 @@
-const { findVehicleById, findUserById, listServiceItemByServiceId} = require("../controllers/search");
+const {
+  findVehicleById,
+  findUserById,
+  listServiceItemByServiceId,
+  listVehiclePostedById,
+} = require("../controllers/search");
 
 function findVehicle(id) {
   findVehicleById(id)
@@ -35,27 +40,28 @@ const Mapper = {
     };
   },
   getPartialUser(user) {
-    if(user){
+    if (user) {
       return {
         uuid: user["uuid"],
         firstName: user["firstName"],
         lastName: user["lastName"],
         phone: user["phone"],
       };
-
-    }else{
-      return {}
-
+    } else {
+      return {};
     }
   },
   getPartialVehicle(user) {
-    return {
-      uuid: user["uuid"],
-      vehicleNumber: user["vehicleNumber"],
-      company: user["company"],
-    };
+    if (user) {
+      return {
+        uuid: user["uuid"],
+        vehicleNumber: user["vehicleNumber"],
+        company: user["company"],
+      };
+    } else {
+      return {};
+    }
   },
-
 
   getSingleServiceItem(user) {
     return {
@@ -64,25 +70,27 @@ const Mapper = {
       itemName: user["itemName"],
       qty: user["qty"],
       salePrice: user["salePrice"],
-      amount: user["amount"]
+      amount: user["amount"],
     };
   },
   listItem(itemList) {
     const userResponse = [];
-    let total=0;
+    let total = 0;
     if (itemList) {
       itemList.forEach((item) => {
         userResponse.push(this.getSingleServiceItem(item));
-        total+=item["amount"]
+        total += item["amount"];
       });
     }
-    return {data: userResponse, totalCost: total};
+    return { data: userResponse, totalCost: total };
   },
   async getSingleService(service) {
     const serviceProvider = await findUserById(service["service_provideId"]);
     const serviceOwner = await findUserById(service["service_ownerId"]);
     const vehicle = await findVehicleById(service["vehicleId"]);
-    const itemList = await listServiceItemByServiceId({serviceId: service["id"]});
+    const itemList = await listServiceItemByServiceId({
+      serviceId: service["id"],
+    });
     const item = this.listItem(itemList);
     return {
       uuid: service["uuid"],
@@ -123,27 +131,31 @@ const Mapper = {
   async listCar(carList) {
     const carItems = [];
     if (carList) {
-      for (let car of carList) {
-        const realUser = await this.getFullVehicle(car);
+      for (let vehicle of carList) {
+        const realUser = await this.getFullVehicle(vehicle);
         carItems.push(realUser);
       }
     }
     return carItems;
   },
   async getFullVehicle(user) {
-    const owner = await findUserById(user["ownerId"]);
-    return {
-      uuid: user["uuid"],
-      vehicleNumber: user["vehicleNumber"],
-      company: user["company"],
-      regNumber: user["regNumber"],
-      color: user["color"],
-      model: user["model"],
-      image: user["image"],
-      owner: this.getPartialUser(owner),
-      status: user["status"],
-      createdAt: user["createdAt"],
-    };
+    if (user) {
+      const owner = await findUserById(user["ownerId"]);
+      return {
+        uuid: user["uuid"],
+        vehicleNumber: user["vehicleNumber"],
+        company: user["company"],
+        regNumber: user["regNumber"],
+        color: user["color"],
+        model: user["model"],
+        image: user["image"],
+        owner: this.getPartialUser(owner),
+        status: user["status"],
+        createdAt: user["createdAt"],
+      };
+    } else {
+      return {};
+    }
   },
 
   async listServiceConversation(serviceList) {
@@ -154,6 +166,30 @@ const Mapper = {
       }
     }
     return serviceResponse;
-  }
+  },
+
+  async getSingleProduct(product) {
+    const postedBy = await findUserById(product["postedById"]);
+    return {
+      uuid: product["uuid"],
+      name: product["name"],
+      description: product["description"],
+      quality: product["avaliable_quatity"],
+      price: product["unit_price"],
+      dateCreated: product["createdAt"],
+      postedBy: this.getPartialUser(postedBy),
+    };
+  },
+
+  async listProduct(productList) {
+    const productItem = [];
+    if (productList) {
+      for (let product of productList) {
+        const realProduct = await this.getSingleProduct(product);
+        productItem.push(realProduct);
+      }
+    }
+    return productItem;
+  },
 };
 module.exports.Mapper = Mapper;

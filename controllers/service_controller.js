@@ -246,25 +246,6 @@ module.exports = {
     }
   },
 
-  deleteServiceItem: async (req, res) => {
-    const uuid = req.params.serviceId;
-    if (!uuid) {
-      return res
-          .status(200)
-          .json({ status: message.FAIL, data: message.DATA_ALL });
-    }
-    try {
-       await appUtil.deleteServiceItem(uuid);
-      return res
-          .status(200)
-          .json({ status: message.SUCCESS, data: message.RECORD_DELETED });
-    } catch (error) {
-      console.log(error);
-      return res
-          .status(200)
-          .json({ status: message.FAIL, data: message.DATA_WRONG });
-    }
-  },
   //ServiceItem Controller
   addItem: async (req, res) => {
     const { serviceId } = req.params;
@@ -319,8 +300,28 @@ module.exports = {
       });
       return res.status(200).json({
         status: message.SUCCESS,
-        data:  Mapper.listItem(itemList),
+        data: Mapper.listItem(itemList),
       });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(200)
+        .json({ status: message.FAIL, data: message.DATA_WRONG });
+    }
+  },
+
+  deleteServiceItem: async (req, res) => {
+    const uuid = req.params.serviceId;
+    if (!uuid) {
+      return res
+        .status(200)
+        .json({ status: message.FAIL, data: message.DATA_ALL });
+    }
+    try {
+      await appUtil.deleteServiceItem(uuid);
+      return res
+        .status(200)
+        .json({ status: message.SUCCESS, data: message.RECORD_DELETED });
     } catch (error) {
       console.log(error);
       return res
