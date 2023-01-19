@@ -111,10 +111,10 @@ module.exports = {
           .status(404)
           .send({ status: message.FAIL, data: message.USER_NOT_FOUND });
 
-    if (!user.accountStatus)
-      return res
-          .status(401)
-          .send({ status: message.FAIL, data: message.DATA_ACCOUNT_INACTIVE });
+    // if (!user.accountStatus)
+    //   return res
+    //       .status(401)
+    //       .send({ status: message.FAIL, data: message.DATA_ACCOUNT_INACTIVE });
     //Password is Correct
     const validPass = await bcrypt.compare(req.body.password, user.password);
     if (!validPass)
