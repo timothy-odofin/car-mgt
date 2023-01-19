@@ -51,7 +51,7 @@ async function sendOTPToEmail(otp, email) {
 
 module.exports = {
   signupUser: async (req, res) => {
-    const otp = generateOtp();
+    //const otp = generateOtp();
     //Lets validate the data before a user
     const { error } = registerValidation(req.body);
     if (error) return res.status(400).send(error.details[0].message);
@@ -71,10 +71,10 @@ module.exports = {
       name: req.body.firstName + " " + req.body.lastName,
       email: req.body.email,
       phone: req.body.phone,
-      accountStatus: false,
+      accountStatus: true,
       category: req.body.category,
       account_type: req.body.serviceList,
-      activationOtp: otp,
+      activationOtp: "",
       password: await encriptPassword(req.body.password),
     });
     try {
