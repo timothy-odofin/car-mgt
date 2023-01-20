@@ -76,6 +76,7 @@ module.exports = {
       account_type: req.body.serviceList,
       activationOtp: "",
       aboutUs: req.body.aboutUs,
+      activationOtp: "",
       password: await encriptPassword(req.body.password),
     });
     try {
@@ -111,7 +112,10 @@ module.exports = {
       return res
         .status(404)
         .send({ status: message.FAIL, data: message.USER_NOT_FOUND });
-
+    if (!user.accountStatus)
+      return res
+        .status(401)
+        .send({ status: message.FAIL, data: message.DATA_ACCOUNT_INACTIVE });
     // if (!user.accountStatus)
     //   return res
     //       .status(401)
