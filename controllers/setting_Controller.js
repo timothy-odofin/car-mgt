@@ -47,4 +47,18 @@ module.exports = {
         .json({ status: message.FAIL, status: process.env.DATA_WRONG });
     }
   },
+
+  aboutUsDetails: async (req, res) => {
+    res.status(200).json({
+      status: message.SUCCESS,
+      data: ["Facebook", "Twitter", "Instagram", "Others"],
+    });
+  },
+
+  serviceTypesDetails: async (req, res) => {
+    res.status(200).json({
+      status: message.SUCCESS,
+      data: ["Repair", "Tolling", "Maintaince", "Others"],
+    });
+  },
 };

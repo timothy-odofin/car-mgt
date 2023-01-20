@@ -60,8 +60,8 @@ module.exports = {
     const emailExist = await User.findOne({ where: { email: req.body.email } });
     if (emailExist)
       return res
-          .status(400)
-          .send({ status: message.FAIL, data: message.DATA_SIGNUP_EXIST });
+        .status(400)
+        .send({ status: message.FAIL, data: message.DATA_SIGNUP_EXIST });
 
     // Hash passwords
 
@@ -75,6 +75,7 @@ module.exports = {
       category: req.body.category,
       account_type: req.body.serviceList,
       activationOtp: otp,
+      aboutUs: req.body.aboutUs,
       password: await encriptPassword(req.body.password),
     });
     try {
@@ -91,8 +92,8 @@ module.exports = {
     } catch (error) {
       console.log(error);
       return res
-          .status(400)
-          .send({ status: message.FAIL, data: message.DATA_WRONG });
+        .status(400)
+        .send({ status: message.FAIL, data: message.DATA_WRONG });
     }
   },
 
@@ -108,13 +109,13 @@ module.exports = {
     });
     if (!user)
       return res
-          .status(404)
-          .send({ status: message.FAIL, data: message.USER_NOT_FOUND });
+        .status(404)
+        .send({ status: message.FAIL, data: message.USER_NOT_FOUND });
 
     if (!user.accountStatus)
       return res
-          .status(401)
-          .send({ status: message.FAIL, data: message.DATA_ACCOUNT_INACTIVE });
+        .status(401)
+        .send({ status: message.FAIL, data: message.DATA_ACCOUNT_INACTIVE });
     //Password is Correct
     const validPass = await bcrypt.compare(req.body.password, user.password);
     if (!validPass)
@@ -149,8 +150,8 @@ module.exports = {
     const user = await User.findOne({ where: { email: email }, raw: true });
     if (!user)
       return res
-          .status(400)
-          .send({ status: message.FAIL, data: message.DATA_INVALID_NO });
+        .status(400)
+        .send({ status: message.FAIL, data: message.DATA_INVALID_NO });
 
     if (user.accountStatus) {
       return res.send({
@@ -161,27 +162,27 @@ module.exports = {
 
     if (user.activationOtp === otp && !user.accountStatus) {
       User.update(
-          // Values to update
-          {
-            accountStatus: true,
-            activationOtp: "0000",
+        // Values to update
+        {
+          accountStatus: true,
+          activationOtp: "0000",
+        },
+        {
+          // Clause
+          where: {
+            id: user.id,
           },
-          {
-            // Clause
-            where: {
-              id: user.id,
-            },
-          }
+        }
       )
-          .then((result) => {
-            return res.send({
-              status: message.SUCCESS,
-              data: message.DATA_ACCOUNT_ACTIVATED,
-            });
-          })
-          .catch((error) => {
-            return res.send({ status: message.FAIL, data: message.DATA_WRONG });
+        .then((result) => {
+          return res.send({
+            status: message.SUCCESS,
+            data: message.DATA_ACCOUNT_ACTIVATED,
           });
+        })
+        .catch((error) => {
+          return res.send({ status: message.FAIL, data: message.DATA_WRONG });
+        });
     } else {
       return res.send({ status: message.FAIL, data: message.DATA_OTP });
     }
@@ -195,8 +196,8 @@ module.exports = {
     const user = await User.findOne({ where: { email: email }, raw: true });
     if (!user)
       return res
-          .status(400)
-          .send({ status: message.FAIL, data: message.DATA_INVALID_NO });
+        .status(400)
+        .send({ status: message.FAIL, data: message.DATA_INVALID_NO });
 
     const validPass = await bcrypt.compare(oldPassword, user.password);
 
@@ -207,26 +208,26 @@ module.exports = {
       });
 
     User.update(
-        // Values to update
-        {
-          password: await encriptPassword(newPassword),
+      // Values to update
+      {
+        password: await encriptPassword(newPassword),
+      },
+      {
+        // Clause
+        where: {
+          id: user.id,
         },
-        {
-          // Clause
-          where: {
-            id: user.id,
-          },
-        }
+      }
     )
-        .then((result) => {
-          return res.send({
-            status: message.SUCCESS,
-            data: message.PASSWORD_CHANGED,
-          });
-        })
-        .catch((error) => {
-          return res.send({ status: message.FAIL, data: message.DATA_WRONG });
+      .then((result) => {
+        return res.send({
+          status: message.SUCCESS,
+          data: message.PASSWORD_CHANGED,
         });
+      })
+      .catch((error) => {
+        return res.send({ status: message.FAIL, data: message.DATA_WRONG });
+      });
   },
 
   forgotPassword: async (req, res) => {
@@ -238,35 +239,35 @@ module.exports = {
     const user = await User.findOne({ where: { email: email }, raw: true });
     if (!user)
       return res
-          .status(400)
-          .send({ status: message.FAIL, data: message.DATA_INVALID_NO });
+        .status(400)
+        .send({ status: message.FAIL, data: message.DATA_INVALID_NO });
 
     if (user.activationOtp != otp)
       return res
-          .status(404)
-          .send({ status: message.FAIL, data: message.INVALID_OTP });
+        .status(404)
+        .send({ status: message.FAIL, data: message.INVALID_OTP });
 
     User.update(
-        // Values to update
-        {
-          password: await encriptPassword(newPassword),
+      // Values to update
+      {
+        password: await encriptPassword(newPassword),
+      },
+      {
+        // Clause
+        where: {
+          id: user.id,
         },
-        {
-          // Clause
-          where: {
-            id: user.id,
-          },
-        }
+      }
     )
-        .then((result) => {
-          return res.send({
-            status: message.SUCCESS,
-            data: message.PASSWORD_RESET,
-          });
-        })
-        .catch((error) => {
-          return res.send({ status: message.FAIL, data: message.DATA_WRONG });
+      .then((result) => {
+        return res.send({
+          status: message.SUCCESS,
+          data: message.PASSWORD_RESET,
         });
+      })
+      .catch((error) => {
+        return res.send({ status: message.FAIL, data: message.DATA_WRONG });
+      });
   },
 
   sendOtpToUser: async (req, res) => {
@@ -278,32 +279,32 @@ module.exports = {
     const user = await User.findOne({ where: { email: email }, raw: true });
     if (!user)
       return res
-          .status(400)
-          .send({ status: message.FAIL, data: message.DATA_INVALID_NO });
+        .status(400)
+        .send({ status: message.FAIL, data: message.DATA_INVALID_NO });
     const OTP = generateOtp();
 
     await sendOTPToEmail(OTP, email);
 
     User.update(
-        // Values to update
-        {
-          activationOtp: OTP,
+      // Values to update
+      {
+        activationOtp: OTP,
+      },
+      {
+        // Clause
+        where: {
+          id: user.id,
         },
-        {
-          // Clause
-          where: {
-            id: user.id,
-          },
-        }
+      }
     )
-        .then((result) => {
-          return res.send({
-            status: message.SUCCESS,
-            data: message.OTP_SENT,
-          });
-        })
-        .catch((error) => {
-          return res.send({ status: message.FAIL, data: message.DATA_WRONG });
+      .then((result) => {
+        return res.send({
+          status: message.SUCCESS,
+          data: message.OTP_SENT,
         });
+      })
+      .catch((error) => {
+        return res.send({ status: message.FAIL, data: message.DATA_WRONG });
+      });
   },
 };

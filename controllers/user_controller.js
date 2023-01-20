@@ -96,6 +96,7 @@ module.exports = {
       photograph,
       account_type,
       account_disable,
+      aboutUs,
       category,
     } = req.body;
     try {
@@ -112,6 +113,7 @@ module.exports = {
         (user.photograph = photograph),
         (user.account_type = account_type),
         (user.account_disable = account_disable),
+        (user.aboutUS = aboutUS),
         (user.category = category);
       await user.save();
       if (!user) {

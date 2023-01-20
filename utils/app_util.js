@@ -36,6 +36,7 @@ const Mapper = {
       category: user["category"],
       serviceList: user["account_type"],
       createdAt: user["createdAt"],
+      aboutUS: user["aboutUs"],
       address: user["address"] === null ? "NA" : user["address"],
     };
   },

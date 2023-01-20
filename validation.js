@@ -8,6 +8,7 @@ const registerValidation = (data) => {
     password: Joi.string().min(4).required(),
     phone: Joi.string().min(4).required(),
     category: Joi.string().min(4).required(),
+    aboutUs: Joi.string(),
     serviceList: Joi.string(),
   };
   return Joi.validate(data, schema);
