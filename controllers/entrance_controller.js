@@ -74,12 +74,8 @@ module.exports = {
       accountStatus: true,
       category: req.body.category,
       account_type: req.body.serviceList,
-<<<<<<< HEAD
-      activationOtp: otp,
-      aboutUs: req.body.aboutUs,
-=======
       activationOtp: "",
->>>>>>> f43293625dfd0c3e6e099f5014ffe20faf129762
+      aboutUs: req.body.aboutUs,
       password: await encriptPassword(req.body.password),
     });
     try {
@@ -116,17 +112,10 @@ module.exports = {
         .status(404)
         .send({ status: message.FAIL, data: message.USER_NOT_FOUND });
 
-<<<<<<< HEAD
-    if (!user.accountStatus)
-      return res
-        .status(401)
-        .send({ status: message.FAIL, data: message.DATA_ACCOUNT_INACTIVE });
-=======
     // if (!user.accountStatus)
     //   return res
     //       .status(401)
     //       .send({ status: message.FAIL, data: message.DATA_ACCOUNT_INACTIVE });
->>>>>>> f43293625dfd0c3e6e099f5014ffe20faf129762
     //Password is Correct
     const validPass = await bcrypt.compare(req.body.password, user.password);
     if (!validPass)
