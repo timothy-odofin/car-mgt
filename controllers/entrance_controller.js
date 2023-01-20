@@ -51,7 +51,7 @@ async function sendOTPToEmail(otp, email) {
 
 module.exports = {
   signupUser: async (req, res) => {
-    const otp = generateOtp();
+    //const otp = generateOtp();
     //Lets validate the data before a user
     const { error } = registerValidation(req.body);
     if (error) return res.status(400).send(error.details[0].message);
@@ -71,11 +71,15 @@ module.exports = {
       name: req.body.firstName + " " + req.body.lastName,
       email: req.body.email,
       phone: req.body.phone,
-      accountStatus: false,
+      accountStatus: true,
       category: req.body.category,
       account_type: req.body.serviceList,
+<<<<<<< HEAD
       activationOtp: otp,
       aboutUs: req.body.aboutUs,
+=======
+      activationOtp: "",
+>>>>>>> f43293625dfd0c3e6e099f5014ffe20faf129762
       password: await encriptPassword(req.body.password),
     });
     try {
@@ -112,10 +116,17 @@ module.exports = {
         .status(404)
         .send({ status: message.FAIL, data: message.USER_NOT_FOUND });
 
+<<<<<<< HEAD
     if (!user.accountStatus)
       return res
         .status(401)
         .send({ status: message.FAIL, data: message.DATA_ACCOUNT_INACTIVE });
+=======
+    // if (!user.accountStatus)
+    //   return res
+    //       .status(401)
+    //       .send({ status: message.FAIL, data: message.DATA_ACCOUNT_INACTIVE });
+>>>>>>> f43293625dfd0c3e6e099f5014ffe20faf129762
     //Password is Correct
     const validPass = await bcrypt.compare(req.body.password, user.password);
     if (!validPass)
