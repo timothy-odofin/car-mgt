@@ -183,3 +183,11 @@ module.exports.listServiceItemByServiceId = async ({ serviceId }) => {
     order: [["id", "DESC"]],
   });
 };
+
+module.exports.listdMaintanceByVehicleId = async ({ vehicleId }) => {
+  return await Vehicle.findAll({
+    where: { vehicleId: vehicleId },
+    raw: true,
+    order: [["id", "DESC"]],
+  });
+};

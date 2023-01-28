@@ -7,6 +7,7 @@ module.exports = {
   SUCCESS: "success",
   DEFAULT_SERVICE_STATUS: "Pending",
   DATA_SIGNUP: "Succesful, kindly activate your account",
+  DATA_USER: "User Update Succesful",
   DATA_SIGNUP_EXIST: "Email already exists.",
   USER_NOT_FOUND: "Either username/password is incorrect",
   DATA_LOGIN_INVALID: "Invalid Password",

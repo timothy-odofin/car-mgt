@@ -74,7 +74,6 @@ module.exports = {
       accountStatus: true,
       category: req.body.category,
       account_type: req.body.serviceList,
-      activationOtp: "",
       aboutUs: req.body.aboutUs,
       activationOtp: "",
       password: await encriptPassword(req.body.password),

@@ -7,6 +7,7 @@ router.post("/new", serviceController.serviceRequest);
 router.post("/update/:uuid", serviceController.updateServiceCost);
 router.get("/fetch", serviceController.fetchAllService);
 router.get("/fetch/provider/:uuid", serviceController.fetchByServiceProvider);
+router.get("/fetch/car/:vehicleId", serviceController.fetchByCarID);
 router.get("/fetch/filter/:uuid", serviceController.filterALlService);
 router.get("/fetch/owner/:ownerId", serviceController.fetchByOwnerId);
 

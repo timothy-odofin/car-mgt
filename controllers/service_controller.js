@@ -1,4 +1,4 @@
-const { Service, ServiceLog, User, Vehicle } = require("../models/index");
+const { Service, Vehicle } = require("../models/index");
 const appUtil = require("../controllers/search");
 const message = require("../config/constant");
 const { Mapper } = require("../utils/app_util");
@@ -143,6 +143,27 @@ module.exports = {
       const user = await appUtil.findUserByUUID(ownerId, res);
       const service = await Service.findAll({
         where: { service_ownerId: user.id },
+        raw: true,
+        order: [["id", "DESC"]],
+      });
+      return res.status(200).json({
+        status: message.SUCCESS,
+        data: await Mapper.listService(service),
+      });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(200)
+        .json({ status: message.FAIL, data: message.DATA_WRONG });
+    }
+  },
+
+  fetchByCarID: async (req, res) => {
+    try {
+      const { vehicleId } = req.params;
+      const vehicle = await appUtil.findVehicleByUUID(vehicleId, res);
+      const service = await Service.findAll({
+        where: { vehicleId: vehicle.id },
         raw: true,
         order: [["id", "DESC"]],
       });

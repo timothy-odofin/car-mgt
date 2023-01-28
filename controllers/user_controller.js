@@ -84,36 +84,12 @@ module.exports = {
 
   updateUser: async (req, res) => {
     const uuid = req.params.uuid;
-    const {
-      firstName,
-      lastName,
-      name,
-      email,
-      phone,
-      contact,
-      address,
-      password,
-      photograph,
-      account_type,
-      account_disable,
-      aboutUs,
-      category,
-    } = req.body;
+    const { address, account_type, aboutUs, category } = req.body;
     try {
       const user = await User.findOne({ where: { uuid } });
-
-      (user.firstName = firstName),
-        (user.lastName = lastName),
-        (user.name = name),
-        (user.email = email),
-        (user.phone = phone),
-        (user.contact = contact),
-        (user.address = address),
-        (user.password = password),
-        (user.photograph = photograph),
+      (user.address = address),
         (user.account_type = account_type),
-        (user.account_disable = account_disable),
-        (user.aboutUS = aboutUS),
+        (user.aboutUs = aboutUs),
         (user.category = category);
       await user.save();
       if (!user) {
@@ -121,7 +97,12 @@ module.exports = {
           .status(404)
           .json({ status: message.FAIL, data: message.DATA_INVALID_NO });
       }
-      res.status(200).json({ status: message.SUCCESS, data: user });
+      res.status(200).json({
+        status: message.SUCCESS,
+        data: {
+          message: message.DATA_USER,
+        },
+      });
     } catch (error) {
       console.log(error);
       return res
