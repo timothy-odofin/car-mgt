@@ -84,11 +84,10 @@ module.exports = {
 
   updateUser: async (req, res) => {
     const uuid = req.params.uuid;
-    const { address, account_type, aboutUs, category } = req.body;
+    const { address, aboutUs, category } = req.body;
     try {
       const user = await User.findOne({ where: { uuid } });
       (user.address = address),
-        (user.account_type = account_type),
         (user.aboutUs = aboutUs),
         (user.category = category);
       await user.save();
@@ -103,6 +102,52 @@ module.exports = {
           message: message.DATA_USER,
         },
       });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .json({ status: message.FAIL, data: message.DATA_WRONG });
+    }
+  },
+
+  updateServiceList: async (req, res) => {
+    const uuid = req.params.uuid;
+    const { serviceList } = req.body;
+    try {
+      const user = await User.findOne({ where: { uuid } });
+      (user.account_type = serviceList), await user.save();
+      if (!user) {
+        return res
+          .status(404)
+          .json({ status: message.FAIL, data: message.DATA_INVALID_NO });
+      }
+      res.status(200).json({
+        status: message.SUCCESS,
+        data: {
+          message: message.DATA_LIST,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .json({ status: message.FAIL, data: message.DATA_WRONG });
+    }
+  },
+
+  listUserByAddress: async (req, res) => {
+    try {
+      const address = req.params.address;
+      const user = await User.findAll({
+        where: {
+          address: {
+            [Op.like]: `%${address}%`,
+          },
+        },
+      });
+      return res
+        .status(201)
+        .json({ status: message.SUCCESS, data: Mapper.listUser(user) });
     } catch (error) {
       console.log(error);
       return res

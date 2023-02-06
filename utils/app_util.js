@@ -2,7 +2,6 @@ const {
   findVehicleById,
   findUserById,
   listServiceItemByServiceId,
-  listVehiclePostedById,
 } = require("../controllers/search");
 
 function findVehicle(id) {

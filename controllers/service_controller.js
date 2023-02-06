@@ -179,6 +179,27 @@ module.exports = {
     }
   },
 
+  selectCategoryByVinId: async (req, res) => {
+    try {
+      const { vehicleNumber } = req.params;
+      const vehicle = await appUtil.findVehicleByVehileNo(vehicleNumber, res);
+      const service = await Service.findAll({
+        where: { vehicleId: vehicle.id },
+        raw: true,
+        order: [["id", "DESC"]],
+      });
+      return res.status(200).json({
+        status: message.SUCCESS,
+        data: await Mapper.listService(service),
+      });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(200)
+        .json({ status: message.FAIL, data: message.DATA_WRONG });
+    }
+  },
+
   /////////////ServiceLog Controller ///////
 
   addServiceLog: async (req, res) => {

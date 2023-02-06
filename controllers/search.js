@@ -55,6 +55,18 @@ module.exports.findVehicleByUUID = async (userUuid, response) => {
   return vechicle;
 };
 
+module.exports.findVehicleByVehileNo = async (vehicleNumber, response) => {
+  const vechicle = await Vehicle.findOne({
+    where: { vehicleNumber: vehicleNumber },
+    raw: true,
+  });
+  if (!vechicle)
+    response
+      .status(201)
+      .json({ status: message.FAIL, data: message.VEHICLE_NOT_FOUND });
+  return vechicle;
+};
+
 module.exports.findInsuranceByUUID = async (userUuid, response) => {
   const vechicle = await Vehicle.findOne({
     where: { uuid: userUuid },

@@ -10,6 +10,10 @@ router.get("/fetch/provider/:uuid", serviceController.fetchByServiceProvider);
 router.get("/fetch/car/:vehicleId", serviceController.fetchByCarID);
 router.get("/fetch/filter/:uuid", serviceController.filterALlService);
 router.get("/fetch/owner/:ownerId", serviceController.fetchByOwnerId);
+router.get(
+  "/select/vin/:vehicleNumber",
+  serviceController.selectCategoryByVinId
+);
 
 // Service_Log Routes
 router.post("/conversation/add/:serviceId", serviceController.addServiceLog);

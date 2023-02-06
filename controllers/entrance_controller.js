@@ -24,7 +24,7 @@ function generateOtp() {
 function emailSender() {
   return nodemailer.createTransport({
     host: "mail.fordsoft.tech",
-    port: 465,
+    port: 587,
     auth: {
       user: "sender@fordsoft.tech",
       pass: "9LCi0mcb?0St",
