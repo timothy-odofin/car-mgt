@@ -26,14 +26,17 @@ const Mapper = {
   },
   getRatingScore(user){
     const ratings = user['ratings'];
-    let totalScore = 0;
-    for (const rating of ratings) {
-      totalScore += rating['score'];
+    if(ratings){
+      let totalScore = 0;
+      for (const rating of ratings) {
+        totalScore += rating['score'];
+      }
+      return totalScore / ratings.length;
+
     }
-    return totalScore / ratings.length;
+    return 0;
   },
   getSingleUser(user) {
-
     return {
       uuid: user["uuid"],
       accountStatus: user["accountStatus"],
@@ -45,9 +48,30 @@ const Mapper = {
       serviceList: user["account_type"],
       createdAt: user["createdAt"],
       aboutUS: user["aboutUs"],
+      yearExp: user["yearExp"],
       rating: this.getRatingScore(user),
       address: user["address"] === null ? "NA" : user["address"],
     };
+
+  },
+  retrieveSingleUser(user) {
+    return {
+      uuid: user["uuid"],
+      accountStatus: user["accountStatus"],
+      firstName: user["firstName"],
+      lastName: user["lastName"],
+      email: user["email"],
+      phone: user["phone"],
+      category: user["category"],
+      serviceList: user["account_type"],
+      createdAt: user["createdAt"],
+      aboutUS: user["aboutUs"],
+      photo: user['photograph'],
+      yearExp: user["yearExp"],
+      rating: this.getRatingScore(user),
+      address: user["address"] === null ? "NA" : user["address"],
+    };
+
   },
   getPartialUser(user) {
     if (user) {

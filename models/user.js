@@ -47,6 +47,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+        yearExp: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
       email: {
         type: DataTypes.STRING,
         allowNull: false,
