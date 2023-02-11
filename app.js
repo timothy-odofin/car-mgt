@@ -27,7 +27,6 @@ app.use("/insurance", insuranceRoute);
 app.use("/service", serviceRoute);
 // CORS POLICY
 app.use(cors());
-
 app.use(notFound);
 
 // app.use(errorHandlerMiddrware);
