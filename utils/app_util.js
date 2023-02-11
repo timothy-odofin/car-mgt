@@ -24,7 +24,17 @@ const Mapper = {
     }
     return userResponse;
   },
+  getRatingScore(user){
+    const ratings = user['ratings'];
+    let totalScore = 0;
+    for (const rating of ratings) {
+      totalScore += rating['score'];
+    }
+    const averageScore = totalScore / ratings.length;
+    return averageScore;
+  },
   getSingleUser(user) {
+
     return {
       uuid: user["uuid"],
       accountStatus: user["accountStatus"],
@@ -36,6 +46,7 @@ const Mapper = {
       serviceList: user["account_type"],
       createdAt: user["createdAt"],
       aboutUS: user["aboutUs"],
+      rating: this.getRatingScore(user),
       address: user["address"] === null ? "NA" : user["address"],
     };
   },
