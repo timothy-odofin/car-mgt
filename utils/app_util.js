@@ -25,6 +25,7 @@ const Mapper = {
     return userResponse;
   },
   getRatingScore(user){
+    console.log(user)
     const ratings = user['ratings'];
     if(ratings){
       let totalScore = 0;

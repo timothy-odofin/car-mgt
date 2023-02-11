@@ -5,6 +5,7 @@ const {
   Service,
   ServiceLog,
   ServiceItem,
+  Rating,
 } = require("../models/index");
 const message = require("../config/constant");
 
@@ -105,9 +106,8 @@ module.exports.findSingleServiceByUuidV2 = async (userUuid, response) => {
 module.exports.findUserByUUID = async (userUuid, response) => {
   const user = await User.findOne({ where: { uuid: userUuid }, raw: true ,
     include: [{
-      model: Rating,
-      as: 'ratings'
-    }]
+      model: Rating,as: "ratings"
+  }]
   });
   if (user) return user;
   else

@@ -3,6 +3,7 @@ const message = require("../config/constant");
 const {Mapper} = require("../utils/app_util");
 const {findUserByUUID} = require("../controllers/search");
 const Sequelize = require("sequelize");
+const {Service} = require("../models");
 const Op = Sequelize.Op;
 
 module.exports = {
@@ -45,10 +46,12 @@ module.exports = {
         const uuid = req.params.uuid;
         try {
             const user = await findUserByUUID(uuid, res);
-            res
+
+            return res
                 .status(200)
                 .json({status: message.SUCCESS, data: Mapper.retrieveSingleUser(user)});
         } catch (error) {
+            console.log(error)
             return res
                 .status(500)
                 .json({status: message.FAIL, data: message.DATA_WRONG});
@@ -60,9 +63,15 @@ module.exports = {
         const {photo} = req.body;
         try {
             const user = await findUserByUUID(uuid, res);
-            (user.photograph = photo);
-            await user.save();
+            await User.update(
+                { photograph: photo },
+                { where: { id: user.id } }
+            );
+            return res
+                .status(200)
+                .json({status: message.SUCCESS, data: message.UPDATE_SUCCESSFUL});
         } catch (error) {
+            console.log(error)
             return res
                 .status(500)
                 .json({status: message.FAIL, data: message.DATA_WRONG});
