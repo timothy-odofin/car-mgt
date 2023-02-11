@@ -30,8 +30,7 @@ const Mapper = {
     for (const rating of ratings) {
       totalScore += rating['score'];
     }
-    const averageScore = totalScore / ratings.length;
-    return averageScore;
+    return totalScore / ratings.length;
   },
   getSingleUser(user) {
 
