@@ -2,21 +2,21 @@
   "development": {
     "username": "dev_user",
     "password": "WT1XWgI9HsJnd5lZ",
-    "database": "garage_app",
+    "database": "gara_store",
     "host": "localhost",
     "dialect": "mysql"
   },
   "test": {
     "username": "dev_user",
     "password": "WT1XWgI9HsJnd5lZ",
-    "database": "garage_app",
+    "database": "gara_store",
     "host": "localhost",
     "dialect": "mysql"
   },
   "production": {
     "username": "dev_user",
     "password": "WT1XWgI9HsJnd5lZ",
-    "database": "garage_app",
+    "database": "gara_store",
     "host": "localhost",
     "dialect": "mysql"
   }
