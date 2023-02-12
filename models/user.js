@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate({ Rating }) {
       // define association here
-      this.hasMany(Rating, { foreignKey: "userId" });
+      this.hasMany(Rating, { foreignKey: "userId", as: "ratings" });
       // this.hasMany(Vehicle, { foreignKey: "ownerId", as: "vehicles" });
       // this.hasMany(ServiceLog, { foreignKey: "postedById", as: "servicelogs" });
     }
@@ -46,6 +46,10 @@ module.exports = (sequelize, DataTypes) => {
       name: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      yearExp: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
       },
       email: {
         type: DataTypes.STRING,
@@ -85,6 +89,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       aboutUs: {
         type: DataTypes.STRING,
+        allowNull: true,
+      },
+      yearExp: {
+        type: DataTypes.INTEGER,
         allowNull: true,
       },
     },

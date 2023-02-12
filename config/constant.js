@@ -11,6 +11,7 @@ module.exports = {
   DATA_LIST: "ServiceList Updated Succesfully",
   DATA_SIGNUP_EXIST: "Email already exists.",
   USER_NOT_FOUND: "Either username/password is incorrect",
+  RATING_ADDED: "Rating succesfully added to the user",
   DATA_LOGIN_INVALID: "Invalid Password",
   INVALID_OTP: "Otp provided is invalid",
   PASSWORD_NOT_MATCH: "Password not matched",

@@ -94,6 +94,10 @@ module.exports = {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      yearExp: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE,

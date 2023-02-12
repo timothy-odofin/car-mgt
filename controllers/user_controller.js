@@ -1,8 +1,9 @@
-const { User } = require("../models/index");
+const { User, Rating } = require("../models/index");
 const message = require("../config/constant");
 const { Mapper } = require("../utils/app_util");
 const { findUserByUUID } = require("../controllers/search");
 const Sequelize = require("sequelize");
+const { Service } = require("../models");
 const Op = Sequelize.Op;
 
 module.exports = {
@@ -17,6 +18,18 @@ module.exports = {
       return res
         .status(500)
         .json({ status: message.FAIL, data: message.DATA_WRONG });
+    }
+  },
+
+  getAllRating: async (req, res) => {
+    try {
+      const rating = await Rating.findAll({
+        include: ["user"],
+      });
+      return res.json(rating);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json(error);
     }
   },
 
@@ -45,10 +58,29 @@ module.exports = {
     const uuid = req.params.uuid;
     try {
       const user = await findUserByUUID(uuid, res);
-      res
-        .status(200)
-        .json({ status: message.SUCCESS, data: Mapper.getSingleUser(user) });
+      return res.status(200).json({
+        status: message.SUCCESS,
+        data: Mapper.retrieveSingleUser(user),
+      });
     } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .json({ status: message.FAIL, data: message.DATA_WRONG });
+    }
+  },
+
+  uploadPhoto: async (req, res, next) => {
+    const uuid = req.params.uuid;
+    const { photo } = req.body;
+    try {
+      const user = await findUserByUUID(uuid, res);
+      await User.update({ photograph: photo }, { where: { id: user.id } });
+      return res
+        .status(200)
+        .json({ status: message.SUCCESS, data: message.UPDATE_SUCCESSFUL });
+    } catch (error) {
+      console.log(error);
       return res
         .status(500)
         .json({ status: message.FAIL, data: message.DATA_WRONG });
@@ -84,18 +116,20 @@ module.exports = {
 
   updateUser: async (req, res) => {
     const uuid = req.params.uuid;
-    const { address, aboutUs, category } = req.body;
+    const { address, aboutUs, category, yearExp } = req.body;
     try {
       const user = await User.findOne({ where: { uuid } });
-      (user.address = address),
-        (user.aboutUs = aboutUs),
-        (user.category = category);
-      await user.save();
       if (!user) {
         return res
           .status(404)
           .json({ status: message.FAIL, data: message.DATA_INVALID_NO });
       }
+      (user.address = address),
+        (user.aboutUs = aboutUs),
+        (user.yearExp = yearExp),
+        (user.category = category);
+      await user.save();
+
       res.status(200).json({
         status: message.SUCCESS,
         data: {
@@ -110,6 +144,35 @@ module.exports = {
     }
   },
 
+  addRating: async (req, res) => {
+    // const uuid = req.params.uuid;
+    const { rate, comment, userUuid } = req.body;
+    try {
+      const user = await User.findOne({ where: { uuid: userUuid } });
+      if (!user) {
+        return res
+          .status(404)
+          .json({ status: message.FAIL, data: message.DATA_INVALID_NO });
+      }
+      const rating = await Rating.create({
+        userId: user.id,
+        comment: comment,
+        score: rate,
+      });
+      await rating.save();
+      res.status(200).json({
+        status: message.SUCCESS,
+        data: {
+          message: rating,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .json({ status: message.FAIL, data: message.DATA_WRONG });
+    }
+  },
   updateServiceList: async (req, res) => {
     const uuid = req.params.uuid;
     const { serviceList } = req.body;
