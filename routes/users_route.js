@@ -12,6 +12,7 @@ router.put("/update/:uuid", userController.updateUser);
 router.put("/update/:uuid", userController.updateServiceList);
 router.post("/rating/add", userController.addRating);
 router.put("/photograph/upload/:uuid", userController.uploadPhoto);
-router.get("/fetch/:address", userController.listUserByAddress);
+// router.get("/searchaddress/:address", userController.listUserByAddress);
+router.get("/search", userController.listUsersByAddressOrServiceType);
 
 module.exports = router;

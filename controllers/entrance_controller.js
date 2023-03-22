@@ -12,7 +12,7 @@ const {
 const otpGenerator = require("otp-generator");
 const nodemailer = require("nodemailer");
 const message = require("../config/constant");
-const {Mapper} = require("../utils/app_util");
+const { Mapper } = require("../utils/app_util");
 
 function generateOtp() {
   return otpGenerator.generate(6, {
@@ -77,6 +77,7 @@ module.exports = {
       account_type: req.body.serviceList,
       aboutUs: req.body.aboutUs,
       activationOtp: "",
+      // address: req.body.address,
       password: await encriptPassword(req.body.password),
     });
     try {
@@ -132,12 +133,12 @@ module.exports = {
     const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, {
       expiresIn: "60d",
     });
-    const retrievedUser =Mapper.retrieveSingleUser(user);
+    const retrievedUser = Mapper.retrieveSingleUser(user);
     res.header("auth_token", token).send({
       status: "success",
       data: {
-        ...retrievedUser, token: token,
-
+        ...retrievedUser,
+        token: token,
       },
     });
   },

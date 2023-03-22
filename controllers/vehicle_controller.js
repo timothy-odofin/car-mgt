@@ -3,7 +3,6 @@ const message = require("../config/constant");
 const axios = require("axios");
 const appUtil = require("../controllers/search");
 const { Mapper } = require("../utils/app_util");
-const { Service } = require("../models");
 const vehicleURL = "https://swipe.fund:7575/paga/verification/vin?vin=";
 
 module.exports = {

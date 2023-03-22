@@ -3,7 +3,6 @@ const message = require("../config/constant");
 const { Mapper } = require("../utils/app_util");
 const { findUserByUUID } = require("../controllers/search");
 const Sequelize = require("sequelize");
-const { Service } = require("../models");
 const Op = Sequelize.Op;
 
 module.exports = {
@@ -198,14 +197,15 @@ module.exports = {
     }
   },
 
-  listUserByAddress: async (req, res) => {
+  listUsersByAddressOrServiceType: async (req, res) => {
     try {
-      const address = req.params.address;
+      const { address, serviceType } = req.query;
       const user = await User.findAll({
         where: {
-          address: {
-            [Op.like]: `%${address}%`,
-          },
+          [Op.or]: [
+            { account_type: { [Op.like]: `%${serviceType}%` } },
+            { address: { [Op.like]: `%${address}%` } },
+          ],
         },
       });
       return res
