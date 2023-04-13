@@ -1,4 +1,4 @@
-const { Service, Vehicle } = require("../models/index");
+const { Service } = require("../models/index");
 const appUtil = require("../controllers/search");
 const message = require("../config/constant");
 const { Mapper } = require("../utils/app_util");

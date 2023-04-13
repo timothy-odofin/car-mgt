@@ -223,5 +223,97 @@ const Mapper = {
     }
     return productItem;
   },
+
+  async getSingleInsurance(insurance) {
+    if (insurance) {
+      return {
+        uuid: insurance["uuid"],
+        classOfNumber: insurance["classOfNumber"],
+        coverType: insurance["coverType"],
+        vehicleUse: insurance["vehicleUse"],
+      };
+    } else {
+      return {};
+    }
+  },
+
+  async listInsurance(insuranceList) {
+    const insuranceItem = [];
+    if (insuranceList) {
+      for (let insurance of insuranceList) {
+        const realInsurance = await this.getSingleInsurance(insurance);
+        insuranceItem.push(realInsurance);
+      }
+    }
+    return insuranceItem;
+  },
+
+  async listPolicyDetail(PolicyDetailList) {
+    const PolicyItems = [];
+    if (PolicyDetailList) {
+      for (let PolicyDetail of PolicyDetailList) {
+        const realPolicy = await this.getPolicyDetail(PolicyDetail);
+        PolicyItems.push(realPolicy);
+      }
+    }
+    return PolicyItems;
+  },
+  async getPolicyDetail(policy) {
+    if (policy) {
+      const owner = await findUserById(policy["ownerId"]);
+      const vehicle = await findVehicleById(policy["vehicleId"]);
+      return {
+        uuid: policy["uuid"],
+        policyHoldler: policy["policyHoldler"],
+        companyName: policy["companyName"],
+        nin: policy["nin"],
+        issueDate: policy["issueDate"],
+        state: policy["state"],
+        lga: policy["lga"],
+        address: policy["address"],
+        owner: this.getPartialUsers(owner),
+        vehicle: this.getPartialVehicle(vehicle),
+        dateCreated: policy["createdAt"],
+      };
+    } else {
+      return {};
+    }
+  },
+
+  getPartialUsers(user) {
+    if (user) {
+      return {
+        uuid: user["uuid"],
+        firstName: user["firstName"],
+        lastName: user["lastName"],
+        phone: user["phone"],
+        email: user["email"],
+      };
+    } else {
+      return {};
+    }
+  },
+
+  async getPolicyDetails(policy) {
+    if (policy) {
+      const owner = await findUserById(policy["ownerId"]);
+      const vehicle = await findVehicleById(policy["vehicleId"]);
+      return {
+        uuid: policy["uuid"],
+        policyHoldler: policy["policyHoldler"],
+        companyName: policy["companyName"],
+        nin: policy["nin"],
+        issueDate: policy["issueDate"],
+        state: policy["state"],
+        lga: policy["lga"],
+        address: policy["address"],
+        owner: this.getPartialUsers(owner),
+        vehicle: this.getPartialVehicle(vehicle),
+        dateCreated: policy["createdAt"],
+      };
+    } else {
+      return {};
+    }
+  },
 };
 module.exports.Mapper = Mapper;

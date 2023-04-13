@@ -7,9 +7,11 @@ const productRoute = require("./routes/product_route");
 const vehicleRoute = require("./routes/vehicle_route");
 const insuranceRoute = require("./routes/insurance_route");
 const serviceRoute = require("./routes/service_route");
+const policyRoute = require("./routes/policyDetails_Route");
 const verified = require("./verifyToken");
 const { sequelize } = require("./models/index");
 const notFound = require("./middleware/not-found");
+const errorHandlerMiddleware = require("./middleware/error-handler");
 const cors = require("cors");
 require("dotenv").config();
 
@@ -25,9 +27,12 @@ app.use("/product", productRoute);
 app.use("/vehicle", vehicleRoute);
 app.use("/insurance", insuranceRoute);
 app.use("/service", serviceRoute);
+app.use("/policydetail", policyRoute);
+
 // CORS POLICY
 app.use(cors());
 app.use(notFound);
+app.use(errorHandlerMiddleware);
 
 // app.use(errorHandlerMiddrware);
 const PORT = process.env.PORT || 4000;

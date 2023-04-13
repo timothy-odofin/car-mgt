@@ -5,6 +5,7 @@ const {
   Service,
   ServiceLog,
   ServiceItem,
+  PolicyDetail,
   Rating,
 } = require("../models/index");
 const message = require("../config/constant");
@@ -98,6 +99,9 @@ module.exports.findSingleServiceByUuid = (userUuid) => {
 module.exports.findByServiceOwned = (userUuid) => {
   return ServiceLog.findOne({ where: { uuid: userUuid }, raw: true });
 };
+module.exports.findSinglePolicyDetailUuid = async (uuid) => {
+  return await PolicyDetail.findOne({ where: { uuid: uuid }, raw: true });
+};
 
 module.exports.findSingleServiceByUuidV2 = async (userUuid, response) => {
   return await Service.findOne({ where: { uuid: userUuid }, raw: true });
@@ -111,7 +115,7 @@ module.exports.findUserByUUID = async (userUuid, response) => {
   if (user) return user;
   else
     return response
-      .status(201)
+      .status(404)
       .json({ status: message.FAIL, data: message.USER_NOT_FOUND });
 };
 
@@ -120,7 +124,6 @@ module.exports.findServiceConversationByUUID = async (uuid) => {
 };
 
 module.exports.deleteServiceItem = async (uuid) => {
-  // console.log("Received UUID*************", uuid);
   await ServiceItem.destroy({ where: { uuid: uuid } });
 };
 module.exports.deleteServiceConversationByUUID = async ({ id }) => {

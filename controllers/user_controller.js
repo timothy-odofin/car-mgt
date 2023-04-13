@@ -25,7 +25,7 @@ module.exports = {
       const rating = await Rating.findAll({
         include: ["user"],
       });
-      return res.json(rating);
+      return res.json({rating, nbHits: rating.length});
     } catch (error) {
       console.log(error);
       return res.status(500).json(error);
