@@ -2,8 +2,6 @@ const { PolicyDetail } = require("../models/index");
 const message = require("../config/constant");
 const appUtil = require("../controllers/search");
 const { Mapper } = require("../utils/app_util");
-const asyncWrapper = require("../middleware/async");
-const { createCustomError } = require("../errors/custom-error");
 
 module.exports = {
   policyDetails: async (req, res) => {
@@ -80,16 +78,22 @@ module.exports = {
         .json({ status: message.FAIL, data: message.DATA_WRONG });
     }
   },
-  getPolicyDetail: asyncWrapper(async (req, res, next) => {
+
+  getPolicyDetail: async (req, res) => {
     const uuid = req.params.uuid;
-    const policy = await PolicyDetail.findOne({ where: { uuid } });
-    if (!policy) {
-      return next(
-        createCustomError("Account with such credential not found", 404)
-      );
+    try {
+      const policy = await PolicyDetail.findOne({ where: { uuid } });
+      res.status(200).json({
+        status: message.SUCCESS,
+        data: await Mapper.getPolicyDetail(policy),
+      });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(200)
+        .json({ status: message.FAIL, data: message.DATA_WRONG });
     }
-    res.status(200).json({ status: message.SUCCESS, data: policy });
-  }),
+  },
 
   removePolicyDetail: async (req, res) => {
     const uuid = req.params.uuid;

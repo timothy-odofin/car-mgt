@@ -293,27 +293,5 @@ const Mapper = {
       return {};
     }
   },
-
-  async getPolicyDetails(policy) {
-    if (policy) {
-      const owner = await findUserById(policy["ownerId"]);
-      const vehicle = await findVehicleById(policy["vehicleId"]);
-      return {
-        uuid: policy["uuid"],
-        policyHoldler: policy["policyHoldler"],
-        companyName: policy["companyName"],
-        nin: policy["nin"],
-        issueDate: policy["issueDate"],
-        state: policy["state"],
-        lga: policy["lga"],
-        address: policy["address"],
-        owner: this.getPartialUsers(owner),
-        vehicle: this.getPartialVehicle(vehicle),
-        dateCreated: policy["createdAt"],
-      };
-    } else {
-      return {};
-    }
-  },
 };
 module.exports.Mapper = Mapper;
