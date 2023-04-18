@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 const { UUIDV4 } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
@@ -15,30 +13,33 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
     toJSON() {
-      return { ...this.get(), id: undefined }
+      return { ...this.get(), id: undefined };
     }
   }
-  Insurance.init({
-    uuid: {
-      type: DataTypes.UUID,
-      defaultValue: UUIDV4
+  Insurance.init(
+    {
+      uuid: {
+        type: DataTypes.UUID,
+        defaultValue: UUIDV4,
+      },
+      classOfInsurance: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      coverType: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      vehicleUse: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
     },
-    classOfNumber: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    coverType: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    vehicleUse: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-  }, {
-    sequelize,
-    tableName: 'insurances',
-    modelName: 'Insurance',
-  });
+    {
+      sequelize,
+      tableName: "insurances",
+      modelName: "Insurance",
+    }
+  );
   return Insurance;
 };

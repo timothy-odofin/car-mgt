@@ -6,9 +6,9 @@ const { createCustomError } = require("../errors/custom-error");
 
 module.exports = {
   addInsurance: asyncWrapper(async (req, res) => {
-    const { classOfNumber, coverType, vehicleUse } = req.body;
+    const { classOfInsurance, coverType, vehicleUse } = req.body;
     const insurance = await Insurance.create({
-      classOfNumber,
+      classOfInsurance,
       coverType,
       vehicleUse,
     });
@@ -30,25 +30,21 @@ module.exports = {
         createCustomError("Account with such credential not found", 404)
       );
     }
-    res
-      .status(200)
-      .json({ status: message.SUCCESS, data: Mapper.listInsurance(insurance) });
+    res.status(200).json({
+      status: message.SUCCESS,
+      data: await Mapper.getSingleInsurance(insurance),
+    });
   }),
 
-  removeInsurance: async (req, res) => {
+  removeInsurance: asyncWrapper(async (req, res) => {
     const uuid = req.params.uuid;
-    try {
-      await Insurance.destroy({ where: { uuid } });
-      return res.json({
-        status: message.SUCCESS,
-        Data: message.DATA_DELETED,
-      });
-    } catch (error) {
-      return res
-        .status(400)
-        .json({ status: message.FAIL, data: message.DATA_WRONG });
-    }
-  },
+
+    await Insurance.destroy({ where: { uuid } });
+    return res.json({
+      status: message.SUCCESS,
+      Data: message.DATA_DELETED,
+    });
+  }),
 
   //Insurance Company APIs
   addInsuranceCompany: asyncWrapper(async (req, res) => {
@@ -62,10 +58,11 @@ module.exports = {
   }),
 
   listAllInsuranceCompany: asyncWrapper(async (req, res) => {
-    const insuranceCompany = await InsuranceComp.findAll({});
-    return res
-      .status(201)
-      .json({ status: message.SUCCESS, data: insuranceCompany });
+    const insurance = await InsuranceComp.findAll({});
+    return res.status(201).json({
+      status: message.SUCCESS,
+      data: Mapper.listInsuranceCompany(insurance),
+    });
   }),
 
   singleInsuranceCompany: asyncWrapper(async (req, res, next) => {
@@ -76,23 +73,21 @@ module.exports = {
         createCustomError("Account with such credential not found", 404)
       );
     }
-    res.status(200).json({ status: message.SUCCESS, data: insurance });
+    res.status(200).json({
+      status: message.SUCCESS,
+      data: await Mapper.getSingleInsuranceCompany(insurance),
+    });
   }),
 
-  removeInsuranceCompany: async (req, res) => {
+  removeInsuranceCompany: asyncWrapper(async (req, res) => {
     const uuid = req.params.uuid;
-    try {
-      await InsuranceComp.destroy({ where: { uuid } });
-      return res.json({
-        status: message.SUCCESS,
-        Data: message.DATA_DELETED,
-      });
-    } catch (error) {
-      return res
-        .status(400)
-        .json({ status: message.FAIL, data: message.DATA_WRONG });
-    }
-  },
+
+    await InsuranceComp.destroy({ where: { uuid } });
+    return res.json({
+      status: message.SUCCESS,
+      Data: message.DATA_DELETED,
+    });
+  }),
   // THE END
 
   vehicleTypes: async (req, res) => {

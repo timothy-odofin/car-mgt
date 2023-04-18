@@ -228,7 +228,7 @@ const Mapper = {
     if (insurance) {
       return {
         uuid: insurance["uuid"],
-        classOfNumber: insurance["classOfNumber"],
+        classOfInsurance: insurance["classOfInsurance"],
         coverType: insurance["coverType"],
         vehicleUse: insurance["vehicleUse"],
       };
@@ -242,6 +242,30 @@ const Mapper = {
     if (insuranceList) {
       for (let insurance of insuranceList) {
         const realInsurance = await this.getSingleInsurance(insurance);
+        insuranceItem.push(realInsurance);
+      }
+    }
+    return insuranceItem;
+  },
+
+  async getSingleInsuranceCompany(insurance) {
+    if (insurance) {
+      return {
+        uuid: insurance["uuid"],
+        name: insurance["name"],
+        logo: insurance["logo"],
+        website: insurance["website"],
+      };
+    } else {
+      return {};
+    }
+  },
+
+  async listInsuranceCompany(insuranceList) {
+    const insuranceItem = [];
+    if (insuranceList) {
+      for (let insurance of insuranceList) {
+        const realInsurance = await this.getSingleInsuranceCompany(insurance);
         insuranceItem.push(realInsurance);
       }
     }
