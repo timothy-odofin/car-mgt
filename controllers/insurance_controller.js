@@ -61,7 +61,7 @@ module.exports = {
     const insurance = await InsuranceComp.findAll({});
     return res.status(201).json({
       status: message.SUCCESS,
-      data: Mapper.listInsuranceCompany(insurance),
+      data: await Mapper.listInsuranceCompany(insurance),
     });
   }),
 

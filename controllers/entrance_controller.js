@@ -81,7 +81,7 @@ module.exports = {
     });
     try {
       const savedUser = await user.save();
-      //await sendOTPToEmail(savedUser.activationOtp, savedUser.email);
+      await sendOTPToEmail(savedUser.activationOtp, savedUser.email);
       return res.send({
         status: message.SUCCESS,
         data: {
@@ -116,10 +116,7 @@ module.exports = {
       return res
         .status(401)
         .send({ status: message.FAIL, data: message.DATA_ACCOUNT_INACTIVE });
-    // if (!user.accountStatus)
-    //   return res
-    //       .status(401)
-    //       .send({ status: message.FAIL, data: message.DATA_ACCOUNT_INACTIVE });
+    
     //Password is Correct
     const validPass = await bcrypt.compare(req.body.password, user.password);
     if (!validPass)

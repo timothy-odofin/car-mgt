@@ -75,7 +75,7 @@ module.exports = {
       const product = await Product.findOne({ where: { uuid } });
       res.status(200).json({
         status: message.SUCCESS,
-        data: Mapper.getSingleProduct(product),
+        data: await Mapper.getSingleProduct(product),
       });
     } catch (error) {
       res.status(500).json({ status: message.FAIL, data: message.DATA_WRONG });
