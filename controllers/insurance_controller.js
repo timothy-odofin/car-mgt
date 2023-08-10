@@ -15,26 +15,37 @@ module.exports = {
     return res.json({ status: message.SUCCESS, data: insurance });
   }),
 
-  editAllInsurance: asyncWrapper(async (req, res) => {
-    const insurance = await Insurance.findAll({});
-    return res
-      .status(201)
-      .json({ status: message.SUCCESS, data: Mapper.listInsurance(insurance) });
-  }),
-
-  singleInsurance: asyncWrapper(async (req, res, next) => {
-    const uuid = req.params.uuid;
-    const insurance = await Insurance.findOne({ where: { uuid } });
-    if (!insurance) {
-      return next(
-        createCustomError("Account with such credential not found", 404)
-      );
+  getAllInsurance: async (req, res) => {
+    try {
+      const insurance = await Insurance.findAll({ raw: true });
+      return res.status(200).json({
+        status: message.SUCCESS,
+        data: await Mapper.listInsurance(insurance),
+        nbHits: insurance.length,
+      });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(200)
+        .json({ status: message.FAIL, data: message.DATA_WRONG });
     }
-    res.status(200).json({
-      status: message.SUCCESS,
-      data: await Mapper.getSingleInsurance(insurance),
-    });
-  }),
+  },
+
+  singleInsurance: async (req, res, next) => {
+    const uuid = req.params.uuid;
+    try {
+      const insurance = await Insurance.findOne({ where: { uuid } });
+      res.status(200).json({
+        status: message.SUCCESS,
+        data: await Mapper.getSingleInsurance(insurance),
+      });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(200)
+        .json({ status: message.FAIL, data: message.DATA_WRONG });
+    }
+  },
 
   removeInsurance: asyncWrapper(async (req, res) => {
     const uuid = req.params.uuid;
@@ -62,6 +73,7 @@ module.exports = {
     return res.status(201).json({
       status: message.SUCCESS,
       data: await Mapper.listInsuranceCompany(insurance),
+      nbHits: insurance.length,
     });
   }),
 

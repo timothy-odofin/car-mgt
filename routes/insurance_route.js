@@ -3,7 +3,7 @@ const router = express.Router();
 const insuranceControlller = require("../controllers/insurance_controller");
 
 router.post("/add", insuranceControlller.addInsurance);
-router.get("/edit", insuranceControlller.editAllInsurance);
+router.get("/edit", insuranceControlller.getAllInsurance);
 router.get("/retrieve/:uuid", insuranceControlller.singleInsurance);
 router.delete("/remove/:uuid", insuranceControlller.removeInsurance);
 
